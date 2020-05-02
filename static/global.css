@@ -10,6 +10,8 @@ html {
 
 #sapper {
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .is-vertical-center {
