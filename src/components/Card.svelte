@@ -1,10 +1,20 @@
 <script>
     export let card = null;
     let hasError = false;
+    let isLoading = true;
 
     $: {
         card;
         hasError = false;
+    }
+
+    function afterLoad() {
+        isLoading = false;
+    }
+
+    function onError() {
+        isLoading = false;
+        hasError = true;
     }
 </script>
 
@@ -63,7 +73,12 @@
 <div class="aspect-ratio-box">
     <div class="aspect-ratio-box-inside">
         {#if !hasError}
-            <img src={'cards/images/' + card.image} alt="{'card ' + card.name}" on:error={() => hasError = true} />
+            <img src={'cards/images/' + card.image} alt="{'card ' + card.name}" on:error={onError} on:load={afterLoad}/>
+            {#if isLoading}
+                <div class="loader-wrapper">
+                    <div class="loader is-loading"></div>
+                </div>
+            {/if}
         {:else}
             <div 
                 class="no-data" 
