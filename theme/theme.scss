@@ -1,7 +1,12 @@
 @charset "utf-8";
 
-$purple:  #9c33ff;
-
-$primary: $purple;
+$primary: #4c4d7f;
 
 @import "../node_modules/bulma/bulma.sass";
+
+@media screen and (min-width: 769px), print {
+    .columns:not(.is-desktop) {
+        display: block;
+    }
+}
+

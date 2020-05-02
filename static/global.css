@@ -19,7 +19,15 @@ html {
     justify-content: center;
 }
 
+.is-center {
+    text-align: center;
+}
+
 .is-fullwidth {
     display: flex;
     width: 100%;
+}
+
+.title.is-1 {
+    color: white;
 }
