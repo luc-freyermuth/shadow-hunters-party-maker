@@ -1,0 +1,5 @@
+{
+    "[svelte]": {
+        "editor.defaultFormatter": "JamesBirtles.svelte-vscode"
+    }
+}
