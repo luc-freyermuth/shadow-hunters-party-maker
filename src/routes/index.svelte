@@ -1,1 +1,1 @@
-<p>Hello world !</p>
+<button class="button is-primary">Créer une partie</button>
