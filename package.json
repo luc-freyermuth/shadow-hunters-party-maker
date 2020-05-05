@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "compression": "^1.7.1",
+    "peerjs": "^1.2.0",
     "polka": "next",
     "sirv": "^0.4.0"
   },

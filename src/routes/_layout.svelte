@@ -3,6 +3,10 @@
     flex: 1;
   }
 
+  img {
+      margin: 0.5rem;
+  }
+
   @media screen and (max-width: 768px) {
     img {
       max-width: 50%;
