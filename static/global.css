@@ -34,6 +34,10 @@ html {
     color: white;
 }
 
+.title.is-2 {
+    color: white;
+}
+
 .loader-wrapper {
     position: absolute;
     top: 0;
