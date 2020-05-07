@@ -1,9 +1,9 @@
 {
-	"background_color": "#ffffff",
+	"background_color": "#4c4d7f",
 	"theme_color": "#333333",
 	"name": "TODO",
 	"short_name": "TODO",
-	"display": "minimal-ui",
+	"display": "fullscreen",
 	"start_url": "/",
 	"icons": [
 		{

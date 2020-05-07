@@ -2,9 +2,13 @@
   a:not(:last-child) {
     margin-bottom: 1em;
   }
+
+  .limited-width {
+      max-width: 1200px;
+  }
 </style>
 
-<div class="container is-fluid is-vertical-center">
+<div class="container is-fluid is-vertical-center limited-width">
   <a href="create-game" class="is-fullwidth">
     <button class="button is-primary is-fullwidth is-large">
       Créer une partie

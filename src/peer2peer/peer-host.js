@@ -35,7 +35,7 @@ class PeerHost {
         });
         connection.on('close', () => {
             this.handleConnectionClosure(connection);
-        })
+        });
     }
 
     handleConnectionClosure(connection) {
@@ -43,17 +43,91 @@ class PeerHost {
     }
 
     handleRequest(connection, type, data) {
-        switch(type) {
+        switch (type) {
             default:
                 console.error(`No request with type: ${type}`);
         }
     }
 
     handleAction(connection, type, data) {
-        switch(type) {
+        switch (type) {
+            case 'pickName':
+                this.pickName(connection, data);
+                break;
             default:
                 console.error(`No action with type: ${type}`);
         }
+    }
+
+    getPlayerByName(name) {
+        return this.players.find(player => player.name === name);
+    }
+
+    getPlayerByConnection(connection) {
+        if (connection) {
+            return this.players.find(player => player.peerId === connection.peer);
+        }
+    }
+
+    getConnectionByPlayer(player) {
+        if (player) {
+            return this.connections.find(connection => connection.peer === player.peerId);
+        }
+    }
+
+    // Actions //
+
+    pickName(connection, name) {
+        if (this.getPlayerByName(data)) {
+            const existingPlayer = this.getPlayerByName(name);
+            existingPlayer.peerId = connection.peer;
+            if (existingPlayer.cardData) {
+                this.sendCardData(existingPlayer);
+            }
+        } else {
+            this.players.push({
+                name,
+                cardData: null,
+                peerId: connection.peer
+            });
+        }
+        this.broadcastPlayersList();
+    }
+
+    // Requests //
+
+    // Send //
+
+    sendCardData(player) {
+        if (player.cardData) {
+            const connection = this.getConnectionByPlayer(player);
+            if (connection) {
+                connection.send({
+                    type: 'cardData',
+                    data: player.cardData
+                });
+            }
+        }
+    }
+
+    // Broadcast //
+
+    broadcast(type, data) {
+        this.connections.forEach(connection => {
+            connection.send({
+                type,
+                data
+            })
+        });
+    }
+
+    broadcastPlayersList() {
+        this.broadcast('playersList', this.players.map(player => {
+            return {
+                name: player.name,
+                isConnected: player.peerId !== null
+            }
+        }));
     }
 }
 
