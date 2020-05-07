@@ -9,7 +9,7 @@
 </style>
 
 <div class="container is-fluid is-vertical-center limited-width">
-  <a href="create-game" class="is-fullwidth">
+  <a href="create-lobby" class="is-fullwidth">
     <button class="button is-primary is-fullwidth is-large">
       Créer une partie
     </button>
