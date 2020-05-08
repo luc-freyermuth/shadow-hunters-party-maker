@@ -1,19 +1,16 @@
 <script>
   import { getPeerHost } from "../peer2peer/peer-host.js";
-  import { onMount } from "svelte";
+  import { goto } from "@sapper/app";
 
+  const peerHost = getPeerHost();
+  
   let host;
   let port;
   let path;
   let key;
 
-  let peerHost;
   let isCreating;
   let error;
-
-  onMount(() => {
-    peerHost = getPeerHost();
-  });
 
   function createLobby() {
     const peerConfig = {};
@@ -24,7 +21,9 @@
     isCreating = true;
     peerHost
       .start(peerConfig)
-      .then(() => {})
+      .then(() => {
+        goto('/lobby-manager');
+      })
       .catch(err => {
         isCreating = false;
         error = err;
