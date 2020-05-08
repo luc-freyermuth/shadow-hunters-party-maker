@@ -30,11 +30,7 @@ html {
     width: 100%;
 }
 
-.title.is-1 {
-    color: white;
-}
-
-.title.is-2 {
+.title {
     color: white;
 }
 
