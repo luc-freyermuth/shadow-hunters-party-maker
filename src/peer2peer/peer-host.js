@@ -17,7 +17,10 @@ class PeerHost {
             this.peer.on('disconnected', () => {
                 console.log('Peer server disconnected');
                 this.peer.reconnect();
-            })
+            });
+            this.peer.on('error', error => {
+                reject(error);
+            });
         })
     }
 

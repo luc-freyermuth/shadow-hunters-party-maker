@@ -1,11 +1,11 @@
 <script context="module">
     export async function preload(page, session) {
-		// the `slug` parameter is available because this file
-		// is called [slug].svelte
-		const { slug } = page.params;
+        // the `slug` parameter is available because this file
+        // is called [slug].svelte
+        const { slug } = page.params;
 
-		return { slug };
-	}
+        return { slug };
+    }
 </script>
 
 <script>

@@ -1,72 +1,127 @@
 <script>
-    import { getPeerHost } from '../peer2peer/peer-host.js';
-    import { onMount } from 'svelte';
+  import { getPeerHost } from "../peer2peer/peer-host.js";
+  import { onMount } from "svelte";
 
-    let host;
-    let port;
-    let path;
-    let key;
+  let host;
+  let port;
+  let path;
+  let key;
 
-    let peerHost;
+  let peerHost;
+  let isCreating;
+  let error;
 
-    onMount(() => {
-        peerHost = getPeerHost();
-    });
+  onMount(() => {
+    peerHost = getPeerHost();
+  });
 
-    function createLobby() {
-        const peerConfig = {};
-        peerHost.start(peerConfig).then(() => {
-            console.log('WOW');
-        })
-    }
+  function createLobby() {
+    const peerConfig = {};
+    if (host) peerConfig.host = host;
+    if (port) peerConfig.port = port;
+    if (path) peerConfig.path = path;
+    if (key) peerConfig.key = key;
+    isCreating = true;
+    peerHost
+      .start(peerConfig)
+      .then(() => {})
+      .catch(err => {
+        isCreating = false;
+        error = err;
+        console.error("connection error:: ", err);
+      });
+  }
 </script>
 
 <style>
   .limited-width {
-      max-width: 800px;
+    max-width: 800px;
   }
 </style>
 
 <div class="container is-fluid is-vertical-center limited-width">
-    <h2 class="title is-2 is-center">Configuration du salon</h2>
+  <h2 class="title is-2 is-center">Configuration du salon</h2>
 
-    <div class="field">
-        <label>Adresse du serveur de courtage</label>
-        <p class="control has-icons-left">
-            <input class="input is-primary" type="text" placeholder="0.peerjs.com" bind:value={host} />
-            <span class="icon is-small is-left">
-                <i class="gg-drive"></i>
-            </span>
-        </p>
+  <div class="field">
+    <label>Adresse du serveur de courtage</label>
+    <p class="control has-icons-left">
+      <input
+        class="input is-primary"
+        type="text"
+        placeholder="0.peerjs.com"
+        bind:value="{host}"
+      />
+      <span class="icon is-small is-left">
+        <i class="gg-drive"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field">
+    <label>Port du serveur de courtage</label>
+    <p class="control has-icons-left">
+      <input
+        class="input is-primary"
+        type="text"
+        placeholder="443"
+        bind:value="{port}"
+      />
+      <span class="icon is-small is-left">
+        <i class="gg-dock-right"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field">
+    <label>Chemin sur le serveur de courtage</label>
+    <p class="control has-icons-left">
+      <input
+        class="input is-primary"
+        type="text"
+        placeholder="/"
+        bind:value="{path}"
+      />
+      <span class="icon is-small is-left">
+        <i class="gg-code-slash"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field">
+    <label>Mot de passe du serveur de courtage</label>
+    <p class="control has-icons-left">
+      <input
+        class="input is-primary"
+        type="password"
+        placeholder="•••••••••"
+        bind:value="{key}"
+      />
+      <span class="icon is-small is-left">
+        <i class="gg-lock"></i>
+      </span>
+    </p>
+  </div>
+  <button
+    class="button is-primary is-fullwidth is-small-margin-bottom"
+    on:click="{createLobby}"
+    class:is-loading="{isCreating}"
+    disabled="{isCreating}"
+  >
+    Créer le salon
+  </button>
+
+  {#if error}
+    <div class="message is-danger">
+      <div class="message-header">
+        <p>Erreur</p>
+        <button
+          class="delete"
+          aria-label="delete"
+          on:click="{() => {
+            error = null;
+          }}"
+        ></button>
+      </div>
+      <div class="message-body">
+        Une erreur s'est produite lors de la connexion au serveur.
+      </div>
     </div>
-    <div class="field">
-        <label>Port du serveur de courtage</label>
-        <p class="control has-icons-left">
-            <input class="input is-primary" type="text" placeholder="443" bind:value={port} />
-            <span class="icon is-small is-left">
-                <i class="gg-dock-right"></i>
-            </span>
-        </p>
-    </div>
-    <div class="field">
-        <label>Chemin sur le serveur de courtage</label>
-        <p class="control has-icons-left">
-            <input class="input is-primary" type="text" placeholder="/" bind:value={path} />
-            <span class="icon is-small is-left">
-                <i class="gg-code-slash"></i>
-            </span>
-        </p>
-    </div>
-    <div class="field">
-        <label>Mot de passe du serveur de courtage</label>
-        <p class="control has-icons-left">
-            <input class="input is-primary" type="password" placeholder="•••••••••" bind:value={key} />
-            <span class="icon is-small is-left">
-                <i class="gg-lock"></i>
-            </span>
-        </p>
-    </div>
-    <button class="button is-primary is-fullwidth" on:click={createLobby}>
-        Créer le salon
-    </button>
+  {/if}
 </div>

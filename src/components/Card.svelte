@@ -73,18 +73,24 @@
 <div class="aspect-ratio-box">
     <div class="aspect-ratio-box-inside">
         {#if !hasError}
-            <img src={'cards/images/' + card.image} alt="{'card ' + card.name}" on:error={onError} on:load={afterLoad}/>
+            <img
+                src="{'cards/images/' + card.image}"
+                alt="{'card ' + card.name}"
+                on:error="{onError}"
+                on:load="{afterLoad}"
+            />
             {#if isLoading}
                 <div class="loader-wrapper">
                     <div class="loader is-loading"></div>
                 </div>
             {/if}
         {:else}
-            <div 
-                class="no-data" 
-                class:shadow={card.team === 'shadow'}
-                class:hunter={card.team === 'hunter'}
-                class:neutral={card.team === 'neutral'}>
+            <div
+                class="no-data"
+                class:shadow="{card.team === 'shadow'}"
+                class:hunter="{card.team === 'hunter'}"
+                class:neutral="{card.team === 'neutral'}"
+            >
                 <span>{card.name}</span>
             </div>
         {/if}
