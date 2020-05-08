@@ -1,15 +1,17 @@
 <script>
   import { cardsStore } from "../stores/cards-store.js";
   import Card from "../components/Card.svelte";
+  import { onMount } from 'svelte';
 
   let cards = [];
-
-  cardsStore.subscribe(newCards => {
-    cards = [...newCards];
-  });
-
   let filteredCards;
-  let search = "";
+  let search = '';
+
+  onMount(() => {
+    cardsStore.subscribe(newCards => {
+      cards = [...newCards];
+    });
+  })
 
   $: filteredCards = cards.filter(c =>
     c.name
