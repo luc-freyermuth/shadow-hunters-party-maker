@@ -58,3 +58,7 @@ html {
 .is-small-margin-bottom {
     margin-bottom: 1.25rem;
 }
+
+.checkbox:hover, .radio:hover {
+  color: inherit;
+}

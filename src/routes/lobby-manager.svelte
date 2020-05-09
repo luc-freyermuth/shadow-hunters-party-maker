@@ -4,8 +4,18 @@
   import { goto } from "@sapper/app";
 
   let peerHost;
-  let sharableLink =
-    "http://shadow-hunters.darckoune.moe/?game=k6jwaiy6m0b00000";
+  let sharableLink;
+
+  let gameMode;
+
+  // Game options //
+  let excludeAllPreviouslyPlayedCards = false;
+  let preventSameSingle = false;
+  let preventSameLetterSingle = false;
+  let propositionsHaveSameLetterDouble = false;
+  let preventSamePlayedDouble = false;
+  let preventSamePropositionsDouble = false;
+  let preventSameLetter = false;
 
   onMount(() => {
     peerHost = getPeerHost();
@@ -61,12 +71,33 @@
   .form {
     margin-top: 1.5rem;
   }
+
+  .options-form {
+    display: inline-block;
+  }
+
+  .bigger {
+    font-size: 1.25rem;
+    font-weight: 550;
+  }
+
+  label.checkbox {
+    display: block;
+  }
+
+  .sub-choice {
+    padding-left: 1.5rem;
+  }
+
+  .control:not(:first-child) {
+    margin-top: 1rem;
+  }
 </style>
 
 <div class="container is-fluid">
   <div class="is-center">
     <h3 class="title is-3">Partagez ce lien aux joueurs</h3>
-    <h5 class="subtitle is-5 vertical-center">
+    <h6 class="subtitle is-6 vertical-center">
       <a href="{sharableLink}" target="_blank">{sharableLink}</a>
       <button class="button is-primary">
         <span class="icon">
@@ -74,14 +105,122 @@
         </span>
         <span>Copier le lien</span>
       </button>
-    </h5>
+    </h6>
   </div>
   <div class="columns is-desktop form">
     <div class="column is-6-desktop is-12-mobile is-inline-block is-center">
       <h4 class="title is-4">Joueurs</h4>
+
     </div>
+
+    <!-- OPTIONS FORM -->
     <div class="column is-6-desktop is-12-mobile is-inline-block is-center">
       <h4 class="title is-4">Options</h4>
+
+      <div class="options-form">
+        
+        <div class="control">
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              bind:checked="{excludeAllPreviouslyPlayedCards}"
+            />
+            Exclure toutes les cartes jouées lors de la partie précédente
+          </label>
+        </div>
+
+        <div class="control">
+          <label class="radio bigger">
+            <input
+              type="radio"
+              name="answer"
+              bind:group="{gameMode}"
+              value="{'single'}"
+            />
+            Ne donner qu'une seule carte
+          </label>
+
+          <label class="checkbox sub-choice" disabled="{gameMode !== 'single'}">
+            <input
+              type="checkbox"
+              disabled="{gameMode !== 'single'}"
+              bind:checked="{preventSameSingle}"
+            />
+            Empêcher les joueurs de tomber deux fois de suite sur la même carte
+          </label>
+
+          <label class="checkbox sub-choice" disabled="{gameMode !== 'single'}">
+            <input
+              type="checkbox"
+              disabled="{gameMode !== 'single'}"
+              bind:checked="{preventSameLetterSingle}"
+            />
+            Empêcher les joueurs de tomber deux fois de suite sur une carte de
+            la même lettre
+          </label>
+        </div>
+
+        <div class="control">
+          <label class="radio bigger">
+            <input
+              type="radio"
+              name="answer"
+              bind:group="{gameMode}"
+              value="{'double'}"
+            />
+            Laisser le choix entre deux cartes
+          </label>
+
+          <label class="checkbox sub-choice" disabled="{gameMode !== 'double'}">
+            <input
+              type="checkbox"
+              disabled="{gameMode !== 'double'}"
+              bind:checked="{propositionsHaveSameLetterDouble}"
+            />
+            Proposer deux cartes de la même lettre
+          </label>
+
+          <label class="checkbox sub-choice" disabled="{gameMode !== 'double'}">
+            <input
+              type="checkbox"
+              disabled="{gameMode !== 'double'}"
+              bind:checked="{preventSamePlayedDouble}"
+            />
+            Empêcher la carte précédement jouée d'être reproposée au même joueur
+          </label>
+
+          <label class="checkbox sub-choice" disabled="{gameMode !== 'double'}">
+            <input
+              type="checkbox"
+              disabled="{gameMode !== 'double'}"
+              bind:checked="{preventSamePropositionsDouble}"
+            />
+            Empêcher les deux cartes précédement proposées d'être reproposées au
+            même joueur
+          </label>
+        </div>
+
+        <div class="control">
+          <label class="radio bigger">
+            <input
+              type="radio"
+              name="answer"
+              bind:group="{gameMode}"
+              value="{'letter'}"
+            />
+            Laisser le choix entre toutes les cartes de la même lettre
+          </label>
+
+          <label class="checkbox sub-choice" disabled="{gameMode !== 'letter'}">
+            <input
+              type="checkbox"
+              disabled="{gameMode !== 'letter'}"
+              bind:checked="{preventSameLetter}"
+            />
+            Empêcher les joueurs de tomber deux fois de suite sur la même lettre
+          </label>
+        </div>
+      </div>
     </div>
   </div>
 </div>

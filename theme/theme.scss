@@ -9,3 +9,21 @@ $primary: #4c4d7f;
         display: block;
     }
 }
+
+.checkbox[disabled=false], .radio[disabled=false], fieldset[disabled=false] .checkbox, fieldset[disabled=false] .radio {
+  color: inherit;
+  cursor: pointer;
+}
+
+$disabled-color: #7a7a7a;
+
+.checkbox[disabled=true], .radio[disabled=true], fieldset[disabled=true] .checkbox, fieldset[disabled=true] .radio {
+  color: $disabled-color;
+  cursor: not-allowed;
+  input {
+    cursor: not-allowed;
+  }
+  &:hover {
+    color: $disabled-color;
+  }
+}
