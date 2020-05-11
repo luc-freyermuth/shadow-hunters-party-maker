@@ -49,14 +49,15 @@
       console.log('connection error', error);
     });
     connectionToHost.on('data', data => {
+      console.log('got message from server', data);
       handleMessage(data.type, data.data);
     });
   }
 
   function handleMessage(type, data) {
-    switch(type) {
+    switch (type) {
       default:
-        console.error('Unable to handle message of type: ' + type); 
+        console.error('Unable to handle message of type: ' + type);
         break;
     }
   }
