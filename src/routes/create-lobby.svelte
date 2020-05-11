@@ -129,7 +129,8 @@
         ></button>
       </div>
       <div class="message-body">
-        Une erreur s'est produite lors de la connexion au serveur.
+        Une erreur s'est produite lors de la connexion au serveur. <br/>
+        Message du serveur : {error}
       </div>
     </div>
   {/if}
