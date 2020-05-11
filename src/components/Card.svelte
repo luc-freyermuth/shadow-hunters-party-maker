@@ -80,7 +80,7 @@
                 on:load="{afterLoad}"
             />
             {#if isLoading}
-                <div class="loader-wrapper">
+                <div class="loader-wrapper is-dimmed">
                     <div class="loader is-loading"></div>
                 </div>
             {/if}

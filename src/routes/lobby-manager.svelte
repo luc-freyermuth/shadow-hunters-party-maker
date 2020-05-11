@@ -6,10 +6,11 @@
   let peerHost;
   let sharableLink;
 
-  let gameMode;
+  let gameMode = 'single';
 
   // Game options //
   let excludeAllPreviouslyPlayedCards = false;
+  let onlyOneWithSameLetter = false;
   let preventSameSingle = false;
   let preventSameLetterSingle = false;
   let propositionsHaveSameLetterDouble = false;
@@ -87,6 +88,7 @@
 
   .sub-choice {
     padding-left: 1.5rem;
+    margin-top: 0.2rem;
   }
 
   .control:not(:first-child) {
@@ -118,14 +120,25 @@
       <h4 class="title is-4">Options</h4>
 
       <div class="options-form">
-        
-        <div class="control">
+
+      <div class="control">
+
           <label class="checkbox">
             <input
               type="checkbox"
               bind:checked="{excludeAllPreviouslyPlayedCards}"
             />
             Exclure toutes les cartes jouées lors de la partie précédente
+          </label>
+        </div>
+        
+        <div class="control">
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              bind:checked="{onlyOneWithSameLetter}"
+            />
+            Un seul personnage de la même lettre par équipe
           </label>
         </div>
 
