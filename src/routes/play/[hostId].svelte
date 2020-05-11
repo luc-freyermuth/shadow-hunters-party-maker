@@ -56,6 +56,9 @@
 
   function handleMessage(type, data) {
     switch (type) {
+      case 'goTo':
+        gameState = data;
+        break;
       default:
         console.error('Unable to handle message of type: ' + type);
         break;

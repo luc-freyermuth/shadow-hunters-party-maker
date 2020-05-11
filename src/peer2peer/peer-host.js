@@ -94,6 +94,7 @@ class PeerHost {
       });
     }
     this.broadcastPlayersList();
+    connection.send({ type: 'goTo', data: 'lobby' });
   }
 
   // Requests //
