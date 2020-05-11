@@ -13,6 +13,9 @@
   let peer;
   let connectionToHost;
   let connectionStatus;
+  let name;
+  let error;
+  let gameState = 'pickName';
 
   onMount(() => {
     createPeer();
@@ -30,8 +33,9 @@
     peer.on('open', () => {
       connect();
     });
-    peer.on('error', error => {
-      console.log('peer error', error);
+    peer.on('error', err => {
+      connectionStatus = 'error';
+      error = err;
     });
   }
 
@@ -44,6 +48,24 @@
     connectionToHost.on('error', error => {
       console.log('connection error', error);
     });
+    connectionToHost.on('data', data => {
+      handleMessage(data.type, data.data);
+    });
+  }
+
+  function handleMessage(type, data) {
+    switch(type) {
+      default:
+        console.error('Unable to handle message of type: ' + type); 
+        break;
+    }
+  }
+
+  function pickName() {
+    connectionToHost.send({
+      action: 'pickName',
+      data: name
+    });
   }
 </script>
 
@@ -55,6 +77,16 @@
   .loading-text {
     padding: 1.5rem;
     text-align: center;
+  }
+
+  .width-limited {
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  .width-more-limited {
+    max-width: 800px;
+    margin: auto;
   }
 </style>
 
@@ -70,5 +102,41 @@
         {#if connectionStatus === 'connectingToHost'}Connexion à l'hôte{/if}
       </h3>
     </div>
+  {/if}
+
+  {#if connectionStatus === 'error'}
+    <div class="is-vertical-center width-limited">
+      <div class="message is-danger">
+        <div class="message-header">
+          <p>Erreur de connexion</p>
+          <button class="delete" aria-label="delete"></button>
+        </div>
+        <div class="message-body">
+          Une erreur s'est produite lors de la connexion au serveur.
+          <br />
+          Message du serveur : {error}
+        </div>
+      </div>
+    </div>
+  {/if}
+
+  {#if connectionStatus === 'ok'}
+    {#if gameState === 'pickName'}
+      <div class="is-vertical-center width-more-limited">
+        <h3 class="title is-3 is-center">Qui êtes-vous ?</h3>
+        <div class="field">
+          <p class="control">
+            <input
+              class="input is-large is-center is-strong"
+              type="text"
+              bind:value="{name}"
+            />
+          </p>
+        </div>
+        <button class="button is-primary is-large" on:click="{pickName}">
+          Rejoindre
+        </button>
+      </div>
+    {/if}
   {/if}
 </div>
