@@ -1,10 +1,11 @@
 <script>
-  import { getPeerHost } from "../peer2peer/peer-host.js";
-  import { onMount } from "svelte";
-  import { goto } from "@sapper/app";
+  import { getPeerHost } from '../peer2peer/peer-host.js';
+  import { onMount } from 'svelte';
+  import { goto } from '@sapper/app';
 
   let peerHost;
   let sharableLink;
+  let players = [];
 
   let gameMode = 'single';
 
@@ -20,33 +21,36 @@
 
   onMount(() => {
     peerHost = getPeerHost();
-    console.log(peerHost);
     if (!peerHost.peer) {
-      goto("/create-lobby");
+      goto('/create-lobby');
       return;
     }
     generateLinkFromPeer(peerHost.peer);
+    peerHost.players$.subscribe(p => {
+      players = p;
+      console.log(p);
+    });
   });
 
   function generateUrlParam(key, value) {
     if (value) {
       return `${key}=${value}`;
     }
-    return "";
+    return '';
   }
 
   function generateLinkFromPeer(peer) {
     sharableLink =
       window.location.origin +
-      "/play/" +
+      '/play/' +
       peer.id +
-      "?" +
+      '?' +
       [
-        generateUrlParam("host", peer.options.host),
-        generateUrlParam("port", peer.options.port),
-        generateUrlParam("path", peer.options.path),
-        generateUrlParam("key", peer.options.key)
-      ].join("&");
+        generateUrlParam('host', peer.options.host),
+        generateUrlParam('port', peer.options.port),
+        generateUrlParam('path', peer.options.path),
+        generateUrlParam('key', peer.options.key)
+      ].join('&');
   }
 </script>
 
@@ -94,6 +98,22 @@
   .control:not(:first-child) {
     margin-top: 1rem;
   }
+
+  .flex {
+    display: flex;
+  }
+
+  .flex-1 {
+    flex: 1;
+  }
+
+  .italic {
+    font-style: italic;
+  }
+
+  .title-margin-top {
+    margin-top: 24px;
+  }
 </style>
 
 <div class="container is-fluid">
@@ -109,10 +129,43 @@
       </button>
     </h6>
   </div>
+
   <div class="columns is-desktop form">
+
+    <!-- PLAYERS FORM -->
     <div class="column is-6-desktop is-12-mobile is-inline-block is-center">
       <h4 class="title is-4">Joueurs</h4>
-
+      <div class="container is-fluid">
+        {#if players.length}
+          <div class="list">
+            {#each players as player}
+              <div class="list-item">
+                <div class="flex">
+                  <div class="flex-1">
+                    {player.name} (
+                    {#if player.peerId}
+                      <span class="has-text-success">Connecté</span>
+                    {:else}
+                      <span class="has-text-danger">Déconnecté</span>
+                    {/if}
+                    )
+                  </div>
+                  <button class="button is-small is-danger">
+                    <span class="icon is-small">
+                      <i class="gg-trash"></i>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            {/each}
+          </div>
+        {:else}
+          <p class="is-center italic">
+            Aucun joueur n'est connecté
+          </p>
+        {/if}
+      </div>
+      <h4 class="title is-4 title-margin-top">Équipes</h4>
     </div>
 
     <!-- OPTIONS FORM -->
@@ -121,7 +174,7 @@
 
       <div class="options-form">
 
-      <div class="control">
+        <div class="control">
 
           <label class="checkbox">
             <input
@@ -131,13 +184,10 @@
             Exclure toutes les cartes jouées lors de la partie précédente
           </label>
         </div>
-        
+
         <div class="control">
           <label class="checkbox">
-            <input
-              type="checkbox"
-              bind:checked="{onlyOneWithSameLetter}"
-            />
+            <input type="checkbox" bind:checked="{onlyOneWithSameLetter}" />
             Un seul personnage de la même lettre par équipe
           </label>
         </div>

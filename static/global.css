@@ -25,7 +25,13 @@ html {
     text-align: center;
 }
 
-.is-fullwidth {
+a.is-fullwidth {
+  display: flex;
+  width: 100%;
+}
+
+
+button.is-fullwidth {
     display: flex;
     width: 100%;
 }
@@ -69,4 +75,17 @@ html {
 
 .checkbox:hover, .radio:hover {
   color: inherit;
+}
+
+.list {
+  background-color: transparent;
+  box-shadow: 0 2px 3px rgba(200, 200, 200, 0.1), 0 0 0 1px rgba(200, 200, 200, 0.1);
+}
+
+.list .list-item {
+  color: white;
+}
+
+.list .list-item:not(:last-child) {
+  border-bottom: 1px solid rgba(200, 200, 200, 0.3)
 }

@@ -1,8 +1,11 @@
+import { Subject } from 'rxjs';
+
 class PeerHost {
   constructor() {
     this.peer = null;
     this.connections = [];
     this.players = [];
+    this.players$ = new Subject();
   }
 
   start(peerConfig) {
@@ -42,6 +45,11 @@ class PeerHost {
 
   handleConnectionClosure(connection) {
     this.connections.splice(this.connections.indexOf(connection));
+    const player = this.getPlayerByConnection(connection);
+    if (player) {
+      player.peerId = null;
+      this.playersChanged();
+    }
   }
 
   handleRequest(connection, type, data) {
@@ -77,6 +85,11 @@ class PeerHost {
     }
   }
 
+  playersChanged() {
+    this.players$.next(this.players);
+    this.broadcastPlayersList();
+  }
+
   // Actions //
 
   pickName(connection, name) {
@@ -93,7 +106,7 @@ class PeerHost {
         peerId: connection.peer
       });
     }
-    this.broadcastPlayersList();
+    this.playersChanged();
     connection.send({ type: 'goTo', data: 'lobby' });
   }
 
