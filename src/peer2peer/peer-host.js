@@ -90,6 +90,10 @@ class PeerHost {
     this.broadcastPlayersList();
   }
 
+  startGame(gameConfig) {
+    console.log(gameConfig);
+  }
+
   // Actions //
 
   pickName(connection, name) {

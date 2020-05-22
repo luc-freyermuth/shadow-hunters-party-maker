@@ -2,10 +2,14 @@
   import { getPeerHost } from '../peer2peer/peer-host.js';
   import { onMount } from 'svelte';
   import { goto } from '@sapper/app';
+  import { cardsStore } from '../stores/cards-store.js';
+  import Card from '../components/Card.svelte';
 
   let peerHost;
   let sharableLink;
   let players = [];
+  let cards = [];
+  let allowedCards = [];
 
   // Game options //
   let gameMode = 'single';
@@ -42,6 +46,15 @@
       autoAssignTeams();
       console.log(p);
     });
+    cardsStore.subscribe(storedCards => {
+      cards = [...storedCards];
+      if (!localStorage.getItem('removedCards')) {
+        allowedCards = [...cards];
+      } else {
+        const removedCardsNames = JSON.parse(localStorage.getItem('removedCards'));
+        allowedCards = cards.filter(card => !removedCardsNames.includes(card.name));
+      }
+    });
   });
 
   function generateUrlParam(key, value) {
@@ -65,6 +78,7 @@
       ].join('&');
   }
 
+  // prettier-ignore
   function autoAssignTeams() {
     switch(players.length) {
       case 0: shadowHuntersCount = 0; neutralCount = 0; break;
@@ -86,6 +100,55 @@
 
   function neutralCountChanged() {
     shadowHuntersCount = (players.length - neutralCount) / 2;
+  }
+
+  function toggleCard(card) {
+    if (allowedCards.findIndex(c => c.name === card.name) > -1) {
+      allowedCards.splice(allowedCards.findIndex(c => c.name === card.name), 1);
+      allowedCards = [...allowedCards];
+    } else {
+      allowedCards = [...allowedCards, card];
+    }
+    localStorage.setItem(
+      'removedCards',
+      JSON.stringify(
+        cards.map(c => c.name).filter(cardName => !allowedCards.map(c => c.name).includes(cardName))
+      )
+    );
+  }
+
+  function startGame() {
+    let options = {
+      excludeAllPreviouslyPlayedCards,
+      onlyOneWithSameLetter,
+      mode: gameMode
+    };
+    switch (options.mode) {
+      case 'single':
+        options.modeOptions = {
+          preventSame: preventSameSingle,
+          preventSameLetter: preventSameLetterSingle
+        };
+        break;
+      case 'double':
+        options.modeOptions = {
+          propositionsHaveSameLetter: propositionsHaveSameLetterDouble,
+          preventSamePlayed: preventSamePlayedDouble,
+          preventSamePropositions: preventSamePropositionsDouble
+        };
+        break;
+      case 'letter':
+        options.modeOptions = {
+          preventSamePropositions: preventSameLetter
+        };
+        break;
+    }
+    const gameConfig = {
+      options,
+      cards: allowedCards,
+      shadowHuntersCount
+    };
+    peerHost.startGame(gameConfig);
   }
 </script>
 
@@ -171,6 +234,23 @@
   .team-select .control .select select {
     width: 100%;
   }
+
+  .start-button {
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  .cards-list-title {
+    margin-top: 2.5rem;
+  }
+
+  .cards {
+    margin-top: 1.5rem;
+  }
+
+  .removed-card {
+    opacity: 0.6;
+  }
 </style>
 
 <div class="container is-fluid">
@@ -196,9 +276,11 @@
         <div class="field team-select">
           <div class="control">
             <div class="select is-danger">
-              <select bind:value={shadowHuntersCount} on:change={shadowHuntersCountChanged}>
+              <select bind:value="{shadowHuntersCount}" on:change="{shadowHuntersCountChanged}">
                 {#each shadowHuntersChoices as choice}
-                  <option value={choice}>{ choice === 0 ? 'Aucun' : choice } shadow{ choice > 1 ? 's' : '' }</option>
+                  <option value="{choice}">
+                    {choice === 0 ? 'Aucun' : choice} shadow{choice > 1 ? 's' : ''}
+                  </option>
                 {/each}
               </select>
             </div>
@@ -208,9 +290,11 @@
         <div class="field team-select">
           <div class="control">
             <div class="select is-info">
-              <select bind:value={shadowHuntersCount} on:change={shadowHuntersCountChanged}>
+              <select bind:value="{shadowHuntersCount}" on:change="{shadowHuntersCountChanged}">
                 {#each shadowHuntersChoices as choice}
-                  <option value={choice}>{ choice === 0 ? 'Aucun' : choice } hunter{ choice > 1 ? 's' : '' }</option>
+                  <option value="{choice}">
+                    {choice === 0 ? 'Aucun' : choice} hunter{choice > 1 ? 's' : ''}
+                  </option>
                 {/each}
               </select>
             </div>
@@ -220,9 +304,11 @@
         <div class="field team-select">
           <div class="control">
             <div class="select is-warning">
-              <select bind:value={neutralCount} on:change={neutralCountChanged}>
+              <select bind:value="{neutralCount}" on:change="{neutralCountChanged}">
                 {#each neutralChoices as choice}
-                  <option value={choice}>{ choice === 0 ? 'Aucun' : choice } neutre{ choice > 1 ? 's' : '' }</option>
+                  <option value="{choice}">
+                    {choice === 0 ? 'Aucun' : choice} neutre{choice > 1 ? 's' : ''}
+                  </option>
                 {/each}
               </select>
             </div>
@@ -268,10 +354,7 @@
         <div class="control">
 
           <label class="checkbox">
-            <input
-              type="checkbox"
-              bind:checked="{excludeAllPreviouslyPlayedCards}"
-            />
+            <input type="checkbox" bind:checked="{excludeAllPreviouslyPlayedCards}" />
             Exclure toutes les cartes jouées lors de la partie précédente
           </label>
         </div>
@@ -285,12 +368,7 @@
 
         <div class="control">
           <label class="radio bigger">
-            <input
-              type="radio"
-              name="answer"
-              bind:group="{gameMode}"
-              value="{'single'}"
-            />
+            <input type="radio" name="answer" bind:group="{gameMode}" value="{'single'}" />
             Ne donner qu'une seule carte
           </label>
 
@@ -309,19 +387,13 @@
               disabled="{gameMode !== 'single'}"
               bind:checked="{preventSameLetterSingle}"
             />
-            Empêcher les joueurs de tomber deux fois de suite sur une carte de
-            la même lettre
+            Empêcher les joueurs de tomber deux fois de suite sur une carte de la même lettre
           </label>
         </div>
 
         <div class="control">
           <label class="radio bigger">
-            <input
-              type="radio"
-              name="answer"
-              bind:group="{gameMode}"
-              value="{'double'}"
-            />
+            <input type="radio" name="answer" bind:group="{gameMode}" value="{'double'}" />
             Laisser le choix entre deux cartes
           </label>
 
@@ -349,19 +421,13 @@
               disabled="{gameMode !== 'double'}"
               bind:checked="{preventSamePropositionsDouble}"
             />
-            Empêcher les deux cartes précédement proposées d'être reproposées au
-            même joueur
+            Empêcher les deux cartes précédement proposées d'être reproposées au même joueur
           </label>
         </div>
 
         <div class="control">
           <label class="radio bigger">
-            <input
-              type="radio"
-              name="answer"
-              bind:group="{gameMode}"
-              value="{'letter'}"
-            />
+            <input type="radio" name="answer" bind:group="{gameMode}" value="{'letter'}" />
             Laisser le choix entre toutes les cartes de la même lettre
           </label>
 
@@ -375,6 +441,30 @@
           </label>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="is-center">
+    <button class="button is-fullwidth is-primary is-large start-button" on:click="{startGame}">
+      Lancer la partie
+    </button>
+  </div>
+
+  <div class="is-center cards-list-title">
+    <h4 class="title is-4">Liste des cartes autorisées</h4>
+  </div>
+
+  <div class="cards">
+    <div class="columns">
+      {#each cards as card}
+        <div class="column is-2-fullhd is-3-desktop is-4-tablet is-12-mobile is-inline-block">
+          <div
+            on:click="{() => toggleCard(card)}"
+            class:removed-card="{allowedCards.findIndex(c => c.name === card.name) === -1}"
+          >
+            <Card {card} />
+          </div>
+        </div>
+      {/each}
     </div>
   </div>
 </div>
