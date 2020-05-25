@@ -94,7 +94,7 @@ class PeerHost {
     const teams = this.createTeams(gameConfig.shadowHuntersCount);
 
     let cards = gameConfig.cards;
-    if (gameConfig.excludeAllPreviouslyPlayedCards) {
+    if (gameConfig.options.excludeAllPreviouslyPlayedCards) {
       const previouslyPlayedCardNames = this.players.map(p => p.previousCard).filter(card => !!card).map(card => card.name);
       cards = cards.filter(card => !previouslyPlayedCardNames.includes(card.name));
     }
@@ -134,11 +134,10 @@ class PeerHost {
               teamMemberChoices = teamMemberChoices.filter(card => card.name !== teamMember.previousCard.name);
             }
             if (preventSameLetter && teamMember.previousCard) {
-              console.log('excluding previous card with same letter');
               teamMemberChoices = teamMemberChoices.filter(card => !card.name.startsWith(teamMember.previousCard.name.slice(0,1)));
             }
 
-            teamMember.currentCard = this.shuffleArray(remainingCards).shift();
+            teamMember.currentCard = this.shuffleArray(teamMemberChoices).shift();
 
             remainingCards = remainingCards.filter(card => card.name !== teamMember.currentCard.name);
 
@@ -148,7 +147,8 @@ class PeerHost {
           }
           foundSolution = true;
         } catch (error) {
-          console.error(error);
+          console.warn(error);
+          console.log('solution not found, retrying');
           foundSolution = false;
         }
       }
@@ -160,7 +160,7 @@ class PeerHost {
       }
     });
 
-    console.log(this.players);
+    console.log(JSON.parse(JSON.stringify(this.players.map(player => ({ name: player.name, card: player.currentCard.name })))));
   }
 
   // Actions //
