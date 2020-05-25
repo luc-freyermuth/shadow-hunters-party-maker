@@ -40,6 +40,9 @@
     peer.on('error', err => {
       connectionStatus = 'error';
       error = err;
+      if (err.toString().startsWith('Error: Lost connection')) {
+        createPeer();
+      }
     });
   }
 
@@ -48,6 +51,9 @@
     connectionToHost = peer.connect(hostId);
     connectionToHost.on('open', () => {
       connectionStatus = 'ok';
+      if (name) {
+        pickName();
+      }
     });
     connectionToHost.on('error', error => {
       console.log('connection error', error);
@@ -55,6 +61,14 @@
     connectionToHost.on('data', data => {
       console.log('got message from server', data);
       handleMessage(data.type, data.data);
+    });
+
+    const connectionPeerId = peer.id;
+    connectionToHost.on('close', () => {
+      connectionToHost = null;
+      if (connectionPeerId === peer.id) {
+        createPeer();
+      }
     });
   }
 
