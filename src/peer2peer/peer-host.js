@@ -44,7 +44,7 @@ class PeerHost {
   }
 
   handleConnectionClosure(connection) {
-    this.connections.splice(this.connections.indexOf(connection));
+    this.connections.splice(this.connections.indexOf(connection), 1);
     const player = this.getPlayerByConnection(connection);
     if (player) {
       player.peerId = null;
@@ -102,7 +102,7 @@ class PeerHost {
     switch (gameConfig.options.mode) {
       case 'single':
         this.setPlayersRandomCardForSingleMode(
-          cards, 
+          cards,
           teams,
           gameConfig.options.onlyOneWithSameLetter,
           gameConfig.options.modeOptions.preventSame,
@@ -112,7 +112,7 @@ class PeerHost {
     }
     // TODO : double and letter modes
 
-    
+
   }
 
   createTeams(shadowHuntersCount) {
@@ -137,7 +137,7 @@ class PeerHost {
               teamMemberChoices = teamMemberChoices.filter(card => card.name !== teamMember.previousCard.name);
             }
             if (preventSameLetter && teamMember.previousCard) {
-              teamMemberChoices = teamMemberChoices.filter(card => !card.name.startsWith(teamMember.previousCard.name.slice(0,1)));
+              teamMemberChoices = teamMemberChoices.filter(card => !card.name.startsWith(teamMember.previousCard.name.slice(0, 1)));
             }
 
             teamMember.currentCard = this.shuffleArray(teamMemberChoices).shift();
@@ -145,7 +145,7 @@ class PeerHost {
             remainingCards = remainingCards.filter(card => card.name !== teamMember.currentCard.name);
 
             if (onlyOneWithSameLetter) {
-              remainingCards = remainingCards.filter(card => !card.name.startsWith(teamMember.currentCard.name.slice(0,1)));
+              remainingCards = remainingCards.filter(card => !card.name.startsWith(teamMember.currentCard.name.slice(0, 1)));
             }
           }
           foundSolution = true;
@@ -161,7 +161,16 @@ class PeerHost {
       player.previousCard = {
         ...player.currentCard
       }
+      this.setPlayerLocationAsCurrentCard(player);
+      this.sendPlayerToItsLocation(player);
     });
+  }
+
+  setPlayerLocationAsCurrentCard(player) {
+    player.location = {
+      room: 'currentCard',
+      roomData: player.currentCard
+    };
   }
 
   // Actions //
@@ -170,41 +179,45 @@ class PeerHost {
     if (this.getPlayerByName(name)) {
       const existingPlayer = this.getPlayerByName(name);
       existingPlayer.peerId = connection.peer;
-      if (existingPlayer.currentCard) {
-        this.sendCurrentCard(existingPlayer);
-      }
+      this.sendPlayerToItsLocation(existingPlayer);
     } else {
-      this.players.push({
+      const newPlayer = {
         name,
         peerId: connection.peer,
         currentCard: null,
         previousCard: null,
-        previousChoices: []
-      });
+        previousChoices: [],
+        location: {
+          room: 'lobby',
+          roomData: null
+        }
+      };
+      this.players.push(newPlayer);
+      this.sendPlayerToItsLocation(newPlayer);
     }
     this.playersChanged();
-    connection.send({ type: 'goTo', data: 'lobby' });
   }
 
   // Requests //
 
   // Send //
 
-  sendCurrentCard(player) {
-    if (player.currentCard) {
-      const connection = this.getConnectionByPlayer(player);
-      if (connection) {
-        connection.send({
-          type: 'currentCard',
-          data: player.currentCard
-        });
-      }
-    }
+  sendPlayerToItsLocation(player) {
+    if (!player) return;
+    const connection = this.getConnectionByPlayer(player);
+    if (!connection) return;
+    this.sendGoTo(connection, player.location.room, player.location.roomData);
+  }
+
+  sendGoTo(connection, whereTo, roomData) {
+    connection.send({ type: 'goTo', data: { room: whereTo, roomData } });
   }
 
   // Broadcast //
 
   broadcast(type, data) {
+    console.log('broadcasting', type, data);
+    console.log('broadcasting to', this.connections);
     this.connections.forEach(connection => {
       connection.send({
         type,

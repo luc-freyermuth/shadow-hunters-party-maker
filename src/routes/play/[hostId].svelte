@@ -7,6 +7,8 @@
 
 <script>
   import { onMount } from 'svelte';
+  import Card from '../../components/Card.svelte';
+  import { fade } from 'svelte/transition';
 
   export let hostId;
 
@@ -16,6 +18,7 @@
   let name;
   let error;
   let gameState = 'pickName';
+  let currentCard;
   let players = [];
 
   onMount(() => {
@@ -58,7 +61,10 @@
   function handleMessage(type, data) {
     switch (type) {
       case 'goTo':
-        gameState = data;
+        gameState = data.room;
+        if (data.room === 'currentCard') {
+          currentCard = data.roomData;
+        }
         break;
       case 'playersList':
         players = data;
@@ -99,6 +105,18 @@
 
   .list {
     max-width: 550px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .float-right {
+    float: right;
+  }
+
+  .card-container {
+    max-width: 450px;
+    margin: auto;
+    width: 100%;
   }
 </style>
 
@@ -153,14 +171,22 @@
                 <div class="flex-1">
                   {player.name}
                   {#if player.isConnected}
-                    <span class="has-text-success italic">Connecté</span>
+                    <span class="has-text-success italic float-right">Connecté</span>
                   {:else}
-                    <span class="has-text-danger italic">Déconnecté</span>
+                    <span class="has-text-danger italic float-right">Déconnecté</span>
                   {/if}
                 </div>
               </div>
             </div>
           {/each}
+        </div>
+      </div>
+    {/if}
+
+    {#if gameState === 'currentCard'}
+      <div class="is-vertical-center">
+        <div class="card-container" in:fade out:fade>
+          <Card card="{currentCard}" />
         </div>
       </div>
     {/if}
