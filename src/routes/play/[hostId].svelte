@@ -16,6 +16,7 @@
   let name;
   let error;
   let gameState = 'pickName';
+  let players = [];
 
   onMount(() => {
     createPeer();
@@ -59,6 +60,9 @@
       case 'goTo':
         gameState = data;
         break;
+      case 'playersList':
+        players = data;
+        break;
       default:
         console.error('Unable to handle message of type: ' + type);
         break;
@@ -92,6 +96,10 @@
     max-width: 800px;
     margin: auto;
   }
+
+  .list {
+    max-width: 550px;
+  }
 </style>
 
 <div class="container is-fluid">
@@ -100,9 +108,7 @@
       <div class="loader is-loading"></div>
       <br />
       <h3 class="title is-3 loading-text">
-        {#if connectionStatus === 'connectingToBroking'}
-          Connexion au serveur de courtage
-        {/if}
+        {#if connectionStatus === 'connectingToBroking'}Connexion au serveur de courtage{/if}
         {#if connectionStatus === 'connectingToHost'}Connexion à l'hôte{/if}
       </h3>
     </div>
@@ -130,16 +136,32 @@
         <h3 class="title is-3 is-center">Qui êtes-vous ?</h3>
         <div class="field">
           <p class="control">
-            <input
-              class="input is-large is-center is-strong"
-              type="text"
-              bind:value="{name}"
-            />
+            <input class="input is-large is-center is-strong" type="text" bind:value="{name}" />
           </p>
         </div>
-        <button class="button is-primary is-large" on:click="{pickName}">
-          Rejoindre
-        </button>
+        <button class="button is-primary is-large" on:click="{pickName}">Rejoindre</button>
+      </div>
+    {/if}
+
+    {#if gameState === 'lobby'}
+      <div class="is-vertical-center">
+        <h4 class="title is-4 is-center">En attente...</h4>
+        <div class="list">
+          {#each players as player}
+            <div class="list-item">
+              <div class="flex">
+                <div class="flex-1">
+                  {player.name}
+                  {#if player.isConnected}
+                    <span class="has-text-success italic">Connecté</span>
+                  {:else}
+                    <span class="has-text-danger italic">Déconnecté</span>
+                  {/if}
+                </div>
+              </div>
+            </div>
+          {/each}
+        </div>
       </div>
     {/if}
   {/if}

@@ -110,6 +110,9 @@ class PeerHost {
         );
         break;
     }
+    // TODO : double and letter modes
+
+    
   }
 
   createTeams(shadowHuntersCount) {
@@ -159,8 +162,6 @@ class PeerHost {
         ...player.currentCard
       }
     });
-
-    console.log(JSON.parse(JSON.stringify(this.players.map(player => ({ name: player.name, card: player.currentCard.name })))));
   }
 
   // Actions //

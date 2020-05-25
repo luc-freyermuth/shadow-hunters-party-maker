@@ -315,6 +315,7 @@
           </div>
         </div>
       </div>
+      
       <h4 class="title is-4 title-margin-top">Joueurs ({players.length})</h4>
       <div class="container is-fluid">
         {#if players.length}
