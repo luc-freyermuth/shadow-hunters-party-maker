@@ -4,6 +4,7 @@
   import { goto } from '@sapper/app';
   import { cardsStore } from '../stores/cards-store.js';
   import Card from '../components/Card.svelte';
+  import copy from 'copy-to-clipboard';
 
   let peerHost;
   let sharableLink;
@@ -153,6 +154,10 @@
   function removePlayer(player) {
     peerHost.removePlayer(player);
   }
+
+  function copyLink() {
+    copy(sharableLink, { message: "test"});
+  }
 </script>
 
 <style>
@@ -261,7 +266,7 @@
     <h3 class="title is-3">Partagez ce lien aux joueurs</h3>
     <h6 class="subtitle is-6 vertical-center">
       <a href="{sharableLink}" target="_blank">{sharableLink}</a>
-      <button class="button is-primary">
+      <button class="button is-primary" on:click={copyLink}>
         <span class="icon">
           <i class="gg-clipboard"></i>
         </span>
@@ -448,7 +453,7 @@
     </div>
   </div>
   <div class="is-center">
-    <button class="button is-fullwidth is-primary is-large start-button" on:click="{startGame}">
+    <button class="button is-fullwidth is-primary is-large start-button" on:click="{startGame}" disabled={players.length === 0}>
       Lancer la partie
     </button>
   </div>
