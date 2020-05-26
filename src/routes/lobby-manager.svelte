@@ -44,7 +44,6 @@
     peerHost.players$.subscribe(p => {
       players = p;
       autoAssignTeams();
-      console.log(p);
     });
     cardsStore.subscribe(storedCards => {
       cards = [...storedCards];
@@ -149,6 +148,10 @@
       shadowHuntersCount
     };
     peerHost.startGame(gameConfig);
+  }
+
+  function removePlayer(player) {
+    peerHost.removePlayer(player);
   }
 </script>
 
@@ -331,7 +334,7 @@
                       <span class="has-text-danger italic">Déconnecté</span>
                     {/if}
                   </div>
-                  <button class="button is-small is-danger">
+                  <button class="button is-small is-danger" on:click={() => { removePlayer(player); }}>
                     <span class="icon is-small">
                       <i class="gg-trash"></i>
                     </span>

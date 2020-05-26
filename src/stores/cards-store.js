@@ -7,6 +7,5 @@ export const cardsStore = readable([], set => {
     })
     .then(data => {
       set(data);
-      console.log('set cards', data);
     })
 });

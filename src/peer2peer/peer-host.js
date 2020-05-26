@@ -173,6 +173,17 @@ class PeerHost {
     };
   }
 
+  removePlayer(player) {
+    if (this.players.findIndex(p => p.name === player.name) > -1) {
+      this.players.splice(this.players.findIndex(p => p.name === player.name), 1);
+      const conn = this.getConnectionByPlayer(player);
+      if (conn) {
+        conn.close();
+      }
+      this.playersChanged();
+    }
+  }
+
   // Actions //
 
   pickName(connection, name) {
@@ -216,8 +227,6 @@ class PeerHost {
   // Broadcast //
 
   broadcast(type, data) {
-    console.log('broadcasting', type, data);
-    console.log('broadcasting to', this.connections);
     this.connections.forEach(connection => {
       connection.send({
         type,
