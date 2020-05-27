@@ -19,6 +19,7 @@
   let error;
   let gameState = 'pickName';
   let currentCard;
+  let choices = [];
   let players = [];
 
   onMount(() => {
@@ -78,6 +79,8 @@
         gameState = data.room;
         if (data.room === 'currentCard') {
           currentCard = data.roomData;
+        } else if (data.room === 'choice') {
+          choices = data.roomData;
         }
         break;
       case 'playersList':
@@ -93,6 +96,13 @@
     connectionToHost.send({
       action: 'pickName',
       data: name
+    });
+  }
+
+  function chooseCard(card) {
+    connectionToHost.send({
+      action: 'chooseCard',
+      data: card.name
     });
   }
 </script>
@@ -202,6 +212,16 @@
         <div class="card-container" in:fade out:fade>
           <Card card="{currentCard}" />
         </div>
+      </div>
+    {/if}
+
+    {#if gameState === 'choice'}
+      <div class="is-vertical-center">
+        {#each choices as cardChoice}
+          <div class="card-container" on:click={() => chooseCard(cardChoice)}>
+            <Card card="{cardChoice}" />
+          </div>
+        {/each}
       </div>
     {/if}
   {/if}

@@ -64,6 +64,9 @@ class PeerHost {
       case 'pickName':
         this.pickName(connection, data);
         break;
+      case 'chooseCard':
+        this.chooseCard(connection, data);
+        break;
       default:
         console.error(`No action with type: ${type}`);
     }
@@ -107,6 +110,17 @@ class PeerHost {
           gameConfig.options.onlyOneWithSameLetter,
           gameConfig.options.modeOptions.preventSame,
           gameConfig.options.modeOptions.preventSameLetter
+        );
+        break;
+
+      case 'double':
+        this.setPlayersRandomChoicesForDoubleMode(
+          cards,
+          teams,
+          gameConfig.options.onlyOneWithSameLetter,
+          gameConfig.options.modeOptions.propositionsHaveSameLetter,
+          gameConfig.options.modeOptions.preventSamePlayed,
+          gameConfig.options.modeOptions.preventSamePropositions
         );
         break;
     }
@@ -166,11 +180,65 @@ class PeerHost {
     });
   }
 
+  setPlayersRandomChoicesForDoubleMode(cards, teams, onlyOneWithSameLetter, propositionsHaveSameLetter, preventSamePlayed, preventSamePropositions) {
+    for (const [teamName, teamMembers] of Object.entries(teams)) {
+      let foundSolution = false;
+      while (!foundSolution) {
+        let remainingCards = cards.filter(card => card.team === teamName);
+        try {
+          for (const teamMember of teamMembers) {
+            let teamMemberChoices = [...remainingCards];
+
+            if (preventSamePlayed && teamMember.previousCard) {
+              teamMemberChoices = teamMemberChoices.filter(card => card.name !== teamMember.previousCard.name);
+            }
+            if (preventSamePropositions && teamMember.previousChoices.length) {
+              teamMemberChoices = teamMemberChoices.filter(card => !teamMember.previousChoices.map(c => c.name).includes(card.name));
+            }
+
+            if (onlyOneWithSameLetter || propositionsHaveSameLetter) {
+              const firstCard = this.shuffleArray(teamMemberChoices).shift();
+              const choicesForSecond = teamMemberChoices.filter(card => card.name.startsWith(firstCard.name.slice(0,1)) && card.name !== firstCard.name);
+              const secondCard = this.shuffleArray(choicesForSecond).shift();
+              teamMember.currentChoices = [firstCard, secondCard];
+              remainingCards = remainingCards.filter(card => !card.name.startsWith(firstCard.name.slice(0,1)));
+            } else {
+              teamMember.currentChoices = this.shuffleArray(teamMemberChoices).slice(0,2);
+              remainingCards = remainingCards.filter(card => !teamMember.currentChoices.map(c => c.name).includes(card.name));
+            }
+          }
+          foundSolution = true;
+        } catch (error) {
+          console.warn(error);
+          console.log('solution not found, retrying');
+          foundSolution = false;
+        }
+      }
+    }
+
+    this.players.forEach(player => {
+      player.previousChoices = [
+        ...player.currentChoices
+      ]
+      this.setPlayerLocationAsCurrentChoices(player);
+      this.sendPlayerToItsLocation(player);
+    });
+
+    console.log(this.players);
+  }
+
   setPlayerLocationAsCurrentCard(player) {
     player.location = {
       room: 'currentCard',
       roomData: player.currentCard
     };
+  }
+
+  setPlayerLocationAsCurrentChoices(player) {
+    player.location = {
+      room: 'choice',
+      roomData: player.currentChoices
+    }
   }
 
   removePlayer(player) {
@@ -197,6 +265,7 @@ class PeerHost {
         peerId: connection.peer,
         currentCard: null,
         previousCard: null,
+        currentChoices: [],
         previousChoices: [],
         location: {
           room: 'lobby',
@@ -207,6 +276,16 @@ class PeerHost {
       this.sendPlayerToItsLocation(newPlayer);
     }
     this.playersChanged();
+  }
+
+  chooseCard(connection, cardName) {
+    const player = this.getPlayerByConnection(connection);
+    if (!player) return;
+    const currentCard = player.currentChoices.find(card => card.name === cardName);
+    if (!currentCard) return;
+    player.currentCard = currentCard;
+    this.setPlayerLocationAsCurrentCard(player);
+    this.sendPlayerToItsLocation(player);
   }
 
   // Requests //
