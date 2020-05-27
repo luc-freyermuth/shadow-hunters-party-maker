@@ -142,6 +142,28 @@
     margin: auto;
     width: 100%;
   }
+
+  .card-item {
+    display: inline-block;
+    max-width: 450px;
+    width: 100%;
+  }
+
+  @media screen and (max-width: 768px) {
+    .card-item {
+      margin: 0.5rem 0;
+    }
+  }
+
+  @media screen and (min-width: 769px) {
+    .card-item {
+      margin: 0 0.5rem;
+    }
+  }
+
+  .pick-card-title {
+    margin-top: 1em;
+  }
 </style>
 
 <div class="container is-fluid">
@@ -217,11 +239,14 @@
 
     {#if gameState === 'choice'}
       <div class="is-vertical-center">
-        {#each choices as cardChoice}
-          <div class="card-container" on:click={() => chooseCard(cardChoice)}>
-            <Card card="{cardChoice}" />
-          </div>
-        {/each}
+      <h4 class="title is-4 is-center pick-card-title">Choisissez une carte</h4>
+        <div class="is-center">
+          {#each choices as cardChoice}
+            <div class="card-item" on:click={() => chooseCard(cardChoice)}>
+              <Card card="{cardChoice}" />
+            </div>
+          {/each}
+        </div>
       </div>
     {/if}
   {/if}
