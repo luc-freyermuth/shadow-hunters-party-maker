@@ -1,4 +1,4 @@
-export interface Card {
+export interface Character {
   name: string;
   team: string;
   image: string;

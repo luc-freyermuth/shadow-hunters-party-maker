@@ -1,14 +1,15 @@
-<script>
+<script lang="typescript">
   import { cardsStore } from "../stores/cards-store.js";
   import Card from "../components/Card.svelte";
   import { onMount } from 'svelte';
+  import { Character } from '../types/character.types'
 
-  let cards = [];
-  let filteredCards;
-  let search = '';
+  let cards: Character[] = [];
+  let filteredCards: Character[];
+  let search: string = '';
 
   onMount(() => {
-    cardsStore.subscribe(newCards => {
+    cardsStore.subscribe((newCards: Character[]) => {
       cards = [...newCards];
     });
   })
