@@ -1,13 +1,13 @@
 import { Subject } from 'rxjs';
-import { Teams } from '../types/player.types';
+import { Teams, Player } from '../types/player.types';
 
 declare const Peer;
 
 class PeerHost {
-  peer;
-  connections;
-  players;
-  players$;
+  peer: any;
+  connections: any[];
+  players: Player[];
+  players$: Subject<Player[]>;
 
   constructor() {
     this.peer = null;

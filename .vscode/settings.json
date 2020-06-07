@@ -1,6 +1,5 @@
 {
-  "[svelte]": {
-    "editor.defaultFormatter": "JamesBirtles.svelte-vscode"
-  },
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "svelte.plugin.typescript.enable": true,
+  "svelte.plugin.typescript.hover.enable": true
 }
