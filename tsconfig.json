@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ESNext"
+    "target": "ESNext",
+    "lib": [
+      "es5", "es6", "dom"
+    ],
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/**/*"

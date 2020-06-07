@@ -13,3 +13,7 @@ export interface PlayerInfo {
   name: string;
   isConnected: boolean;
 }
+
+export interface Teams {
+  [teamName: string]: Player[];
+}

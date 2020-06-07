@@ -1,6 +1,14 @@
 import { Subject } from 'rxjs';
+import { Teams } from '../types/player.types';
+
+declare const Peer;
 
 class PeerHost {
+  peer;
+  connections;
+  players;
+  players$;
+
   constructor() {
     this.peer = null;
     this.connections = [];
@@ -138,7 +146,7 @@ class PeerHost {
     }
   }
 
-  setPlayersRandomCardForSingleMode(cards, teams, onlyOneWithSameLetter, preventSame, preventSameLetter) {
+  setPlayersRandomCardForSingleMode(cards, teams: Teams, onlyOneWithSameLetter, preventSame, preventSameLetter) {
     for (const [teamName, teamMembers] of Object.entries(teams)) {
       let foundSolution = false;
       while (!foundSolution) {
@@ -180,7 +188,7 @@ class PeerHost {
     });
   }
 
-  setPlayersRandomChoicesForDoubleMode(cards, teams, onlyOneWithSameLetter, propositionsHaveSameLetter, preventSamePlayed, preventSamePropositions) {
+  setPlayersRandomChoicesForDoubleMode(cards, teams: Teams, onlyOneWithSameLetter, propositionsHaveSameLetter, preventSamePlayed, preventSamePropositions) {
     for (const [teamName, teamMembers] of Object.entries(teams)) {
       let foundSolution = false;
       while (!foundSolution) {

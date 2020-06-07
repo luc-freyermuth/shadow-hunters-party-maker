@@ -1,5 +1,5 @@
-<script>
-  import { getPeerHost } from '../peer2peer/peer-host.js';
+<script lang="typescript">
+  import { getPeerHost } from '../peer2peer/peer-host';
   import { onMount } from 'svelte';
   import { goto } from '@sapper/app';
   import { cardsStore } from '../stores/cards-store.js';
@@ -118,7 +118,7 @@
   }
 
   function startGame() {
-    let options = {
+    let options: any = {
       excludeAllPreviouslyPlayedCards,
       onlyOneWithSameLetter,
       mode: gameMode

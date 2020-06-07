@@ -1,5 +1,5 @@
-<script>
-  import { getPeerHost } from "../peer2peer/peer-host.js";
+<script lang="typescript">
+  import { getPeerHost } from "../peer2peer/peer-host";
   import { goto } from "@sapper/app";
   import { onMount } from 'svelte';
 
@@ -22,7 +22,7 @@
   let error;
 
   function createLobby() {
-    const peerConfig = {};
+    const peerConfig: any = {};
     if (host) peerConfig.host = host;
     if (port) peerConfig.port = port;
     if (path) peerConfig.path = path;
