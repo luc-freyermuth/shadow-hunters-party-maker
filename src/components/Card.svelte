@@ -1,5 +1,7 @@
-<script>
-  export let card = null;
+<script lang="typescript">
+  import { Card } from '../types/card.types'
+
+  export let card: Card = null;
   let hasError = false;
   let isLoading = true;
 
