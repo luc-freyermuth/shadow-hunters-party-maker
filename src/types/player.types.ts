@@ -7,6 +7,10 @@ export interface Player {
   previousCard: Character;
   currentChoices: Character[];
   previousChoices: Character[];
+  location: {
+    room: string;
+    roomData: any;
+  }
 }
 
 export interface PlayerInfo {

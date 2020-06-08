@@ -1,11 +1,12 @@
 import { Subject } from 'rxjs';
 import { Teams, Player } from '../types/player.types';
-
-declare const Peer;
+import Peer from '../types/peer';
+import { GameConfig } from '../types/config.types';
+import { Character } from '../types/character.types';
 
 class PeerHost {
-  peer: any;
-  connections: any[];
+  peer: Peer;
+  connections: Peer.DataConnection[];
   players: Player[];
   players$: Subject<Player[]>;
 
@@ -16,7 +17,7 @@ class PeerHost {
     this.players$ = new Subject();
   }
 
-  start(peerConfig) {
+  start(peerConfig): Promise<string> {
     return new Promise((resolve, reject) => {
       this.peer = new Peer(peerConfig);
       this.peer.on('open', id => {
@@ -35,7 +36,7 @@ class PeerHost {
     })
   }
 
-  handleNewConnection(connection) {
+  handleNewConnection(connection: Peer.DataConnection) {
     this.connections.push(connection);
     connection.on('data', data => {
       console.log('got message from client', data);
@@ -51,7 +52,7 @@ class PeerHost {
     });
   }
 
-  handleConnectionClosure(connection) {
+  handleConnectionClosure(connection: Peer.DataConnection) {
     this.connections.splice(this.connections.indexOf(connection), 1);
     const player = this.getPlayerByConnection(connection);
     if (player) {
@@ -60,14 +61,14 @@ class PeerHost {
     }
   }
 
-  handleRequest(connection, type, data) {
+  handleRequest(connection: Peer.DataConnection, type: string, data: any) {
     switch (type) {
       default:
         console.error(`No request with type: ${type}`);
     }
   }
 
-  handleAction(connection, type, data) {
+  handleAction(connection: Peer.DataConnection, type: string, data: any) {
     switch (type) {
       case 'pickName':
         this.pickName(connection, data);
@@ -80,17 +81,17 @@ class PeerHost {
     }
   }
 
-  getPlayerByName(name) {
+  getPlayerByName(name: string): Player {
     return this.players.find(player => player.name === name);
   }
 
-  getPlayerByConnection(connection) {
+  getPlayerByConnection(connection: Peer.DataConnection): Player {
     if (connection) {
       return this.players.find(player => player.peerId === connection.peer);
     }
   }
 
-  getConnectionByPlayer(player) {
+  getConnectionByPlayer(player: Player): Peer.DataConnection {
     if (player) {
       return this.connections.find(connection => connection.peer === player.peerId);
     }
@@ -101,8 +102,8 @@ class PeerHost {
     this.broadcastPlayersList();
   }
 
-  startGame(gameConfig) {
-    const teams = this.createTeams(gameConfig.shadowHuntersCount);
+  startGame(gameConfig: GameConfig) {
+    const teams: Teams = this.createTeams(gameConfig.shadowHuntersCount);
 
     let cards = gameConfig.cards;
     if (gameConfig.options.excludeAllPreviouslyPlayedCards) {
@@ -137,7 +138,7 @@ class PeerHost {
 
   }
 
-  createTeams(shadowHuntersCount) {
+  createTeams(shadowHuntersCount: number): Teams {
     const shuffledPlayers = this.shuffleArray(this.players);
     return {
       hunter: shuffledPlayers.slice(0, shadowHuntersCount),
@@ -146,14 +147,14 @@ class PeerHost {
     }
   }
 
-  setPlayersRandomCardForSingleMode(cards, teams: Teams, onlyOneWithSameLetter, preventSame, preventSameLetter) {
+  setPlayersRandomCardForSingleMode(cards: Character[], teams: Teams, onlyOneWithSameLetter: boolean, preventSame: boolean, preventSameLetter: boolean) {
     for (const [teamName, teamMembers] of Object.entries(teams)) {
       let foundSolution = false;
       while (!foundSolution) {
-        let remainingCards = cards.filter(card => card.team === teamName);
+        let remainingCards: Character[] = cards.filter(card => card.team === teamName);
         try {
           for (const teamMember of teamMembers) {
-            let teamMemberChoices = [...remainingCards];
+            let teamMemberChoices: Character[] = [...remainingCards];
 
             if (preventSame && teamMember.previousCard) {
               teamMemberChoices = teamMemberChoices.filter(card => card.name !== teamMember.previousCard.name);
@@ -188,14 +189,14 @@ class PeerHost {
     });
   }
 
-  setPlayersRandomChoicesForDoubleMode(cards, teams: Teams, onlyOneWithSameLetter, propositionsHaveSameLetter, preventSamePlayed, preventSamePropositions) {
+  setPlayersRandomChoicesForDoubleMode(cards: Character[], teams: Teams, onlyOneWithSameLetter: boolean, propositionsHaveSameLetter: boolean, preventSamePlayed: boolean, preventSamePropositions: boolean) {
     for (const [teamName, teamMembers] of Object.entries(teams)) {
       let foundSolution = false;
       while (!foundSolution) {
-        let remainingCards = cards.filter(card => card.team === teamName);
+        let remainingCards: Character[] = cards.filter(card => card.team === teamName);
         try {
           for (const teamMember of teamMembers) {
-            let teamMemberChoices = [...remainingCards];
+            let teamMemberChoices: Character[] = [...remainingCards];
 
             if (preventSamePlayed && teamMember.previousCard) {
               teamMemberChoices = teamMemberChoices.filter(card => card.name !== teamMember.previousCard.name);
@@ -235,21 +236,21 @@ class PeerHost {
     console.log(this.players);
   }
 
-  setPlayerLocationAsCurrentCard(player) {
+  setPlayerLocationAsCurrentCard(player: Player) {
     player.location = {
       room: 'currentCard',
       roomData: player.currentCard
     };
   }
 
-  setPlayerLocationAsCurrentChoices(player) {
+  setPlayerLocationAsCurrentChoices(player: Player) {
     player.location = {
       room: 'choice',
       roomData: player.currentChoices
     }
   }
 
-  removePlayer(player) {
+  removePlayer(player: Player) {
     if (this.players.findIndex(p => p.name === player.name) > -1) {
       this.players.splice(this.players.findIndex(p => p.name === player.name), 1);
       const conn = this.getConnectionByPlayer(player);
@@ -262,7 +263,7 @@ class PeerHost {
 
   // Actions //
 
-  pickName(connection, name) {
+  pickName(connection: Peer.DataConnection, name: string) {
     if (this.getPlayerByName(name)) {
       const existingPlayer = this.getPlayerByName(name);
       existingPlayer.peerId = connection.peer;
@@ -286,7 +287,7 @@ class PeerHost {
     this.playersChanged();
   }
 
-  chooseCard(connection, cardName) {
+  chooseCard(connection: Peer.DataConnection, cardName: string) {
     const player = this.getPlayerByConnection(connection);
     if (!player) return;
     const currentCard = player.currentChoices.find(card => card.name === cardName);
@@ -300,20 +301,20 @@ class PeerHost {
 
   // Send //
 
-  sendPlayerToItsLocation(player) {
+  sendPlayerToItsLocation(player: Player) {
     if (!player) return;
     const connection = this.getConnectionByPlayer(player);
     if (!connection) return;
     this.sendGoTo(connection, player.location.room, player.location.roomData);
   }
 
-  sendGoTo(connection, whereTo, roomData) {
+  sendGoTo(connection: Peer.DataConnection, whereTo: string, roomData: any) {
     connection.send({ type: 'goTo', data: { room: whereTo, roomData } });
   }
 
   // Broadcast //
 
-  broadcast(type, data) {
+  broadcast(type: string, data: any) {
     this.connections.forEach(connection => {
       connection.send({
         type,
@@ -331,7 +332,7 @@ class PeerHost {
     }));
   }
 
-  shuffleArray(array) {
+  shuffleArray<T>(array:T[]): T[] {
     const a = [...array];
     for (let k = 0; k < 1000; k++) {
       for (let i = a.length - 1; i > 0; i--) {
@@ -343,9 +344,9 @@ class PeerHost {
   }
 }
 
-let hostInstance;
+let hostInstance: PeerHost;
 
-export function getPeerHost() {
+export function getPeerHost(): PeerHost {
   if (!hostInstance) {
     hostInstance = new PeerHost();
   }

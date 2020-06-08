@@ -1,15 +1,17 @@
-<script lang="typescript">
+<script lang="typescript">import { PeerConfig } from "../types/config.types";
+
   import { getPeerHost } from "../peer2peer/peer-host";
   import { goto } from "@sapper/app";
   import { onMount } from 'svelte';
 
   const peerHost = getPeerHost();
   
-  let host;
-  let port;
-  let path;
-  let key;
-
+  let host: string;
+  let port: string;
+  let path: string;
+  let key: string;
+  let isCreating: boolean;
+  let error: boolean;
 
   onMount(() => {
     const localStoredPeerConfig = localStorage.getItem('PEER_CONFIG') ? JSON.parse(localStorage.getItem('PEER_CONFIG')) : null;
@@ -18,11 +20,8 @@
     }
   });
 
-  let isCreating;
-  let error;
-
   function createLobby() {
-    const peerConfig: any = {};
+    const peerConfig: PeerConfig = {};
     if (host) peerConfig.host = host;
     if (port) peerConfig.port = port;
     if (path) peerConfig.path = path;

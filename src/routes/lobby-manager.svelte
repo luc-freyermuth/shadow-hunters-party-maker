@@ -1,4 +1,5 @@
-<script lang="typescript">
+<script lang="typescript">import { GameConfig } from '../types/config.types';
+
   import { getPeerHost } from '../peer2peer/peer-host';
   import { onMount } from 'svelte';
   import { goto } from '@sapper/app';
@@ -13,7 +14,7 @@
   let allowedCards = [];
 
   // Game options //
-  let gameMode = 'single';
+  let gameMode: string = 'single';
   let excludeAllPreviouslyPlayedCards = false;
   let onlyOneWithSameLetter = false;
   let preventSameSingle = false;
@@ -118,10 +119,11 @@
   }
 
   function startGame() {
-    let options: any = {
+    let options: GameConfig['options'] = {
       excludeAllPreviouslyPlayedCards,
       onlyOneWithSameLetter,
-      mode: gameMode
+      mode: gameMode,
+      modeOptions: null
     };
     switch (options.mode) {
       case 'single':
