@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": [
-      "es5", "es6", "dom"
+      "es5", "es6", "dom", "es2017"
     ],
     "allowSyntheticDefaultImports": true
   },

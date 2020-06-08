@@ -1,17 +1,20 @@
-<script lang="typescript">import { GameConfig } from '../types/config.types';
+<script lang="typescript">
 
-  import { getPeerHost } from '../peer2peer/peer-host';
+  import { getPeerHost, PeerHost } from '../peer2peer/peer-host';
   import { onMount } from 'svelte';
   import { goto } from '@sapper/app';
-  import { cardsStore } from '../stores/cards-store.js';
+  import { cardsStore } from '../stores/cards-store';
   import Card from '../components/Card.svelte';
   import copy from 'copy-to-clipboard';
+  import { GameConfig } from '../types/config.types';
+  import { Character } from '../types/character.types';
+  import { Player } from '../types/player.types';
 
-  let peerHost;
-  let sharableLink;
-  let players = [];
-  let cards = [];
-  let allowedCards = [];
+  let peerHost: PeerHost;
+  let sharableLink: string;
+  let players: Player[] = [];
+  let cards: Character[] = [];
+  let allowedCards: Character[] = [];
 
   // Game options //
   let gameMode: string = 'single';
@@ -58,7 +61,7 @@
     });
   });
 
-  function generateUrlParam(key, value) {
+  function generateUrlParam(key: string, value: string) {
     if (value) {
       return `${key}=${value}`;
     }
@@ -103,7 +106,7 @@
     shadowHuntersCount = (players.length - neutralCount) / 2;
   }
 
-  function toggleCard(card) {
+  function toggleCard(card: Character) {
     if (allowedCards.findIndex(c => c.name === card.name) > -1) {
       allowedCards.splice(allowedCards.findIndex(c => c.name === card.name), 1);
       allowedCards = [...allowedCards];
@@ -145,7 +148,7 @@
         };
         break;
     }
-    const gameConfig = {
+    const gameConfig: GameConfig = {
       options,
       cards: allowedCards,
       shadowHuntersCount
@@ -153,7 +156,7 @@
     peerHost.startGame(gameConfig);
   }
 
-  function removePlayer(player) {
+  function removePlayer(player: Player) {
     peerHost.removePlayer(player);
   }
 

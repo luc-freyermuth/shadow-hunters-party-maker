@@ -1,8 +1,9 @@
-<script lang="typescript">import { PeerConfig } from "../types/config.types";
+<script lang="typescript">
 
   import { getPeerHost } from "../peer2peer/peer-host";
   import { goto } from "@sapper/app";
   import { onMount } from 'svelte';
+  import { PeerConfig } from "../types/config.types";
 
   const peerHost = getPeerHost();
   

@@ -4,7 +4,7 @@ import Peer from '../types/peer';
 import { GameConfig } from '../types/config.types';
 import { Character } from '../types/character.types';
 
-class PeerHost {
+export class PeerHost {
   peer: Peer;
   connections: Peer.DataConnection[];
   players: Player[];
