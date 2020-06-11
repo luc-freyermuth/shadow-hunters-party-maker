@@ -133,7 +133,7 @@ declare namespace Peer {
   interface PeerJSOption {
     key?: string;
     host?: string;
-    port?: number;
+    port?: number | string;
     path?: string;
     secure?: boolean;
     config?: RTCConfiguration;
