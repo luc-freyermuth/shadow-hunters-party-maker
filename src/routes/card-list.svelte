@@ -1,23 +1,21 @@
-<script>
-  import { cardsStore } from "../stores/cards-store.js";
-  import Card from "../components/Card.svelte";
+<script lang="typescript">
+  import { cardsStore } from '../stores/cards-store';
+  import Card from '../components/Card.svelte';
   import { onMount } from 'svelte';
+  import { Character } from '../types/character.types';
 
-  let cards = [];
-  let filteredCards;
-  let search = '';
+  let cards: Character[] = [];
+  let filteredCards: Character[];
+  let search: string = '';
 
   onMount(() => {
-    cardsStore.subscribe(newCards => {
+    cardsStore.subscribe((newCards: Character[]) => {
       cards = [...newCards];
     });
-  })
+  });
 
   $: filteredCards = cards.filter(c =>
-    c.name
-      .toLowerCase()
-      .trim()
-      .includes(search.toLowerCase().trim())
+    c.name.toLowerCase().trim().includes(search.toLowerCase().trim())
   );
 </script>
 
@@ -32,14 +30,9 @@
 
   <div class="field">
     <p class="control has-icons-left has-icons-right">
-      <input
-        class="input is-primary"
-        type="text"
-        placeholder="Rechercher..."
-        bind:value="{search}"
-      />
+      <input class="input is-primary" type="text" placeholder="Rechercher..." bind:value={search} />
       <span class="icon is-small is-left">
-        <i class="gg-search"></i>
+        <i class="gg-search" />
       </span>
     </p>
   </div>
@@ -47,10 +40,7 @@
   <div class="cards">
     <div class="columns">
       {#each filteredCards as card}
-        <div
-          class="column is-3-fullhd is-4-desktop is-6-tablet is-12-mobile
-          is-inline-block"
-        >
+        <div class="column is-3-fullhd is-4-desktop is-6-tablet is-12-mobile is-inline-block">
           <Card {card} />
         </div>
       {/each}

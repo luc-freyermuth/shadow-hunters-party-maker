@@ -1,6 +1,3 @@
 {
-  "[svelte]": {
-    "editor.defaultFormatter": "JamesBirtles.svelte-vscode"
-  },
   "editor.tabSize": 2
 }

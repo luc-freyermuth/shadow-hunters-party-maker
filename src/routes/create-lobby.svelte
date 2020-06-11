@@ -1,28 +1,29 @@
-<script>
-  import { getPeerHost } from "../peer2peer/peer-host.js";
-  import { goto } from "@sapper/app";
+<script lang="typescript">
+  import { getPeerHost } from '../peer2peer/peer-host';
+  import { goto } from '@sapper/app';
   import { onMount } from 'svelte';
+  import { PeerConfig } from '../types/config.types';
 
   const peerHost = getPeerHost();
-  
-  let host;
-  let port;
-  let path;
-  let key;
 
+  let host: string;
+  let port: string;
+  let path: string;
+  let key: string;
+  let isCreating: boolean;
+  let error: boolean;
 
   onMount(() => {
-    const localStoredPeerConfig = localStorage.getItem('PEER_CONFIG') ? JSON.parse(localStorage.getItem('PEER_CONFIG')) : null;
+    const localStoredPeerConfig = localStorage.getItem('PEER_CONFIG')
+      ? JSON.parse(localStorage.getItem('PEER_CONFIG'))
+      : null;
     if (localStoredPeerConfig) {
       ({ host, port, path, key } = localStoredPeerConfig);
     }
   });
 
-  let isCreating;
-  let error;
-
   function createLobby() {
-    const peerConfig = {};
+    const peerConfig: PeerConfig = {};
     if (host) peerConfig.host = host;
     if (port) peerConfig.port = port;
     if (path) peerConfig.path = path;
@@ -37,7 +38,7 @@
       .catch(err => {
         isCreating = false;
         error = err;
-        console.error("connection error:: ", err);
+        console.error('connection error:: ', err);
       });
   }
 </script>
@@ -54,64 +55,44 @@
   <div class="field">
     <label>Adresse du serveur de courtage</label>
     <p class="control has-icons-left">
-      <input
-        class="input is-primary"
-        type="text"
-        placeholder="0.peerjs.com"
-        bind:value="{host}"
-      />
+      <input class="input is-primary" type="text" placeholder="0.peerjs.com" bind:value={host} />
       <span class="icon is-small is-left">
-        <i class="gg-drive"></i>
+        <i class="gg-drive" />
       </span>
     </p>
   </div>
   <div class="field">
     <label>Port du serveur de courtage</label>
     <p class="control has-icons-left">
-      <input
-        class="input is-primary"
-        type="text"
-        placeholder="443"
-        bind:value="{port}"
-      />
+      <input class="input is-primary" type="text" placeholder="443" bind:value={port} />
       <span class="icon is-small is-left">
-        <i class="gg-dock-right"></i>
+        <i class="gg-dock-right" />
       </span>
     </p>
   </div>
   <div class="field">
     <label>Chemin sur le serveur de courtage</label>
     <p class="control has-icons-left">
-      <input
-        class="input is-primary"
-        type="text"
-        placeholder="/"
-        bind:value="{path}"
-      />
+      <input class="input is-primary" type="text" placeholder="/" bind:value={path} />
       <span class="icon is-small is-left">
-        <i class="gg-code-slash"></i>
+        <i class="gg-code-slash" />
       </span>
     </p>
   </div>
   <div class="field">
     <label>Mot de passe du serveur de courtage</label>
     <p class="control has-icons-left">
-      <input
-        class="input is-primary"
-        type="password"
-        placeholder="•••••••••"
-        bind:value="{key}"
-      />
+      <input class="input is-primary" type="password" placeholder="•••••••••" bind:value={key} />
       <span class="icon is-small is-left">
-        <i class="gg-lock"></i>
+        <i class="gg-lock" />
       </span>
     </p>
   </div>
   <button
     class="button is-primary is-fullwidth is-small-margin-bottom"
-    on:click="{createLobby}"
-    class:is-loading="{isCreating}"
-    disabled="{isCreating}"
+    on:click={createLobby}
+    class:is-loading={isCreating}
+    disabled={isCreating}
   >
     Créer le salon
   </button>
@@ -123,13 +104,14 @@
         <button
           class="delete"
           aria-label="delete"
-          on:click="{() => {
+          on:click={() => {
             error = null;
-          }}"
-        ></button>
+          }}
+        />
       </div>
       <div class="message-body">
-        Une erreur s'est produite lors de la connexion au serveur. <br/>
+        Une erreur s'est produite lors de la connexion au serveur.
+        <br />
         Message du serveur : {error}
       </div>
     </div>

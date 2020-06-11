@@ -169,7 +169,7 @@
 <div class="container is-fluid">
   {#if connectionStatus !== 'ok' && connectionStatus !== 'error'}
     <div class="loader-wrapper">
-      <div class="loader is-loading"></div>
+      <div class="loader is-loading" />
       <br />
       <h3 class="title is-3 loading-text">
         {#if connectionStatus === 'connectingToBroking'}Connexion au serveur de courtage{/if}
@@ -183,7 +183,7 @@
       <div class="message is-danger">
         <div class="message-header">
           <p>Erreur de connexion</p>
-          <button class="delete" aria-label="delete"></button>
+          <button class="delete" aria-label="delete" />
         </div>
         <div class="message-body">
           Une erreur s'est produite lors de la connexion au serveur.
@@ -200,10 +200,10 @@
         <h3 class="title is-3 is-center">Qui êtes-vous ?</h3>
         <div class="field">
           <p class="control">
-            <input class="input is-large is-center is-strong" type="text" bind:value="{name}" />
+            <input class="input is-large is-center is-strong" type="text" bind:value={name} />
           </p>
         </div>
-        <button class="button is-primary is-large" on:click="{pickName}">Rejoindre</button>
+        <button class="button is-primary is-large" on:click={pickName}>Rejoindre</button>
       </div>
     {/if}
 
@@ -232,18 +232,18 @@
     {#if gameState === 'currentCard'}
       <div class="is-vertical-center">
         <div class="card-container" in:fade out:fade>
-          <Card card="{currentCard}" />
+          <Card card={currentCard} />
         </div>
       </div>
     {/if}
 
     {#if gameState === 'choice'}
       <div class="is-vertical-center">
-      <h4 class="title is-4 is-center pick-card-title">Choisissez une carte</h4>
+        <h4 class="title is-4 is-center pick-card-title">Choisissez une carte</h4>
         <div class="is-center">
           {#each choices as cardChoice}
             <div class="card-item" on:click={() => chooseCard(cardChoice)}>
-              <Card card="{cardChoice}" />
+              <Card card={cardChoice} />
             </div>
           {/each}
         </div>

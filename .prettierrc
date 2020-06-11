@@ -1,9 +1,12 @@
 {
-  "svelteSortOrder" : "scripts-styles-markup",
-  "svelteStrictMode": true,
+  "svelteSortOrder": "scripts-styles-markup",
+  "svelteStrictMode": false,
   "svelteBracketNewLine": true,
-  "svelteAllowShorthand": false,
+  "svelteAllowShorthand": true,
   "tabWidth": 2,
   "singleQuote": true,
-  "printWidth": 100
+  "printWidth": 100,
+  "trailingComma": "none",
+  "bracketSpacing": true,
+  "arrowParens": "avoid"
 }

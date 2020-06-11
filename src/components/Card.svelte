@@ -1,5 +1,7 @@
-<script>
-  export let card = null;
+<script lang="typescript">
+  import { Character } from '../types/character.types';
+
+  export let card: Character = null;
   let hasError = false;
   let isLoading = true;
 
@@ -74,22 +76,22 @@
   <div class="aspect-ratio-box-inside">
     {#if !hasError}
       <img
-        src="{'cards/images/' + card.image}"
-        alt="{'card ' + card.name}"
-        on:error="{onError}"
-        on:load="{afterLoad}"
+        src={'cards/images/' + card.image}
+        alt={'card ' + card.name}
+        on:error={onError}
+        on:load={afterLoad}
       />
       {#if isLoading}
         <div class="loader-wrapper is-dimmed">
-          <div class="loader is-loading"></div>
+          <div class="loader is-loading" />
         </div>
       {/if}
     {:else}
       <div
         class="no-data"
-        class:shadow="{card.team === 'shadow'}"
-        class:hunter="{card.team === 'hunter'}"
-        class:neutral="{card.team === 'neutral'}"
+        class:shadow={card.team === 'shadow'}
+        class:hunter={card.team === 'hunter'}
+        class:neutral={card.team === 'neutral'}
       >
         <span>{card.name}</span>
       </div>
