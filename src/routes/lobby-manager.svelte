@@ -1,5 +1,4 @@
 <script lang="typescript">
-
   import { getPeerHost, PeerHost } from '../peer2peer/peer-host';
   import { onMount } from 'svelte';
   import { goto } from '@sapper/app';
@@ -108,7 +107,10 @@
 
   function toggleCard(card: Character) {
     if (allowedCards.findIndex(c => c.name === card.name) > -1) {
-      allowedCards.splice(allowedCards.findIndex(c => c.name === card.name), 1);
+      allowedCards.splice(
+        allowedCards.findIndex(c => c.name === card.name),
+        1
+      );
       allowedCards = [...allowedCards];
     } else {
       allowedCards = [...allowedCards, card];
@@ -161,7 +163,7 @@
   }
 
   function copyLink() {
-    copy(sharableLink, { message: "test"});
+    copy(sharableLink, { message: 'test' });
   }
 </script>
 
@@ -270,10 +272,10 @@
   <div class="is-center">
     <h3 class="title is-3">Partagez ce lien aux joueurs</h3>
     <h6 class="subtitle is-6 vertical-center">
-      <a href="{sharableLink}" target="_blank">{sharableLink}</a>
+      <a href={sharableLink} target="_blank">{sharableLink}</a>
       <button class="button is-primary" on:click={copyLink}>
         <span class="icon">
-          <i class="gg-clipboard"></i>
+          <i class="gg-clipboard" />
         </span>
         <span>Copier le lien</span>
       </button>
@@ -289,9 +291,9 @@
         <div class="field team-select">
           <div class="control">
             <div class="select is-danger">
-              <select bind:value="{shadowHuntersCount}" on:change="{shadowHuntersCountChanged}">
+              <select bind:value={shadowHuntersCount} on:change={shadowHuntersCountChanged}>
                 {#each shadowHuntersChoices as choice}
-                  <option value="{choice}">
+                  <option value={choice}>
                     {choice === 0 ? 'Aucun' : choice} shadow{choice > 1 ? 's' : ''}
                   </option>
                 {/each}
@@ -303,9 +305,9 @@
         <div class="field team-select">
           <div class="control">
             <div class="select is-info">
-              <select bind:value="{shadowHuntersCount}" on:change="{shadowHuntersCountChanged}">
+              <select bind:value={shadowHuntersCount} on:change={shadowHuntersCountChanged}>
                 {#each shadowHuntersChoices as choice}
-                  <option value="{choice}">
+                  <option value={choice}>
                     {choice === 0 ? 'Aucun' : choice} hunter{choice > 1 ? 's' : ''}
                   </option>
                 {/each}
@@ -317,9 +319,9 @@
         <div class="field team-select">
           <div class="control">
             <div class="select is-warning">
-              <select bind:value="{neutralCount}" on:change="{neutralCountChanged}">
+              <select bind:value={neutralCount} on:change={neutralCountChanged}>
                 {#each neutralChoices as choice}
-                  <option value="{choice}">
+                  <option value={choice}>
                     {choice === 0 ? 'Aucun' : choice} neutre{choice > 1 ? 's' : ''}
                   </option>
                 {/each}
@@ -328,7 +330,7 @@
           </div>
         </div>
       </div>
-      
+
       <h4 class="title is-4 title-margin-top">Joueurs ({players.length})</h4>
       <div class="container is-fluid">
         {#if players.length}
@@ -344,9 +346,14 @@
                       <span class="has-text-danger italic">Déconnecté</span>
                     {/if}
                   </div>
-                  <button class="button is-small is-danger" on:click={() => { removePlayer(player); }}>
+                  <button
+                    class="button is-small is-danger"
+                    on:click={() => {
+                      removePlayer(player);
+                    }}
+                  >
                     <span class="icon is-small">
-                      <i class="gg-trash"></i>
+                      <i class="gg-trash" />
                     </span>
                   </button>
                 </div>
@@ -368,38 +375,38 @@
         <div class="control">
 
           <label class="checkbox">
-            <input type="checkbox" bind:checked="{excludeAllPreviouslyPlayedCards}" />
+            <input type="checkbox" bind:checked={excludeAllPreviouslyPlayedCards} />
             Exclure toutes les cartes jouées lors de la partie précédente
           </label>
         </div>
 
         <div class="control">
           <label class="checkbox">
-            <input type="checkbox" bind:checked="{onlyOneWithSameLetter}" />
+            <input type="checkbox" bind:checked={onlyOneWithSameLetter} />
             Un seul personnage de la même lettre par équipe
           </label>
         </div>
 
         <div class="control">
           <label class="radio bigger">
-            <input type="radio" name="answer" bind:group="{gameMode}" value="{'single'}" />
+            <input type="radio" name="answer" bind:group={gameMode} value={'single'} />
             Ne donner qu'une seule carte
           </label>
 
-          <label class="checkbox sub-choice" disabled="{gameMode !== 'single'}">
+          <label class="checkbox sub-choice" disabled={gameMode !== 'single'}>
             <input
               type="checkbox"
-              disabled="{gameMode !== 'single'}"
-              bind:checked="{preventSameSingle}"
+              disabled={gameMode !== 'single'}
+              bind:checked={preventSameSingle}
             />
             Empêcher les joueurs de tomber deux fois de suite sur la même carte
           </label>
 
-          <label class="checkbox sub-choice" disabled="{gameMode !== 'single'}">
+          <label class="checkbox sub-choice" disabled={gameMode !== 'single'}>
             <input
               type="checkbox"
-              disabled="{gameMode !== 'single'}"
-              bind:checked="{preventSameLetterSingle}"
+              disabled={gameMode !== 'single'}
+              bind:checked={preventSameLetterSingle}
             />
             Empêcher les joueurs de tomber deux fois de suite sur une carte de la même lettre
           </label>
@@ -407,33 +414,33 @@
 
         <div class="control">
           <label class="radio bigger">
-            <input type="radio" name="answer" bind:group="{gameMode}" value="{'double'}" />
+            <input type="radio" name="answer" bind:group={gameMode} value={'double'} />
             Laisser le choix entre deux cartes
           </label>
 
-          <label class="checkbox sub-choice" disabled="{gameMode !== 'double'}">
+          <label class="checkbox sub-choice" disabled={gameMode !== 'double'}>
             <input
               type="checkbox"
-              disabled="{gameMode !== 'double'}"
-              bind:checked="{propositionsHaveSameLetterDouble}"
+              disabled={gameMode !== 'double'}
+              bind:checked={propositionsHaveSameLetterDouble}
             />
             Proposer deux cartes de la même lettre
           </label>
 
-          <label class="checkbox sub-choice" disabled="{gameMode !== 'double'}">
+          <label class="checkbox sub-choice" disabled={gameMode !== 'double'}>
             <input
               type="checkbox"
-              disabled="{gameMode !== 'double'}"
-              bind:checked="{preventSamePlayedDouble}"
+              disabled={gameMode !== 'double'}
+              bind:checked={preventSamePlayedDouble}
             />
             Empêcher la carte précédement jouée d'être reproposée au même joueur
           </label>
 
-          <label class="checkbox sub-choice" disabled="{gameMode !== 'double'}">
+          <label class="checkbox sub-choice" disabled={gameMode !== 'double'}>
             <input
               type="checkbox"
-              disabled="{gameMode !== 'double'}"
-              bind:checked="{preventSamePropositionsDouble}"
+              disabled={gameMode !== 'double'}
+              bind:checked={preventSamePropositionsDouble}
             />
             Empêcher les deux cartes précédement proposées d'être reproposées au même joueur
           </label>
@@ -441,15 +448,15 @@
 
         <div class="control">
           <label class="radio bigger">
-            <input type="radio" name="answer" bind:group="{gameMode}" value="{'letter'}" />
+            <input type="radio" name="answer" bind:group={gameMode} value={'letter'} />
             Laisser le choix entre toutes les cartes de la même lettre
           </label>
 
-          <label class="checkbox sub-choice" disabled="{gameMode !== 'letter'}">
+          <label class="checkbox sub-choice" disabled={gameMode !== 'letter'}>
             <input
               type="checkbox"
-              disabled="{gameMode !== 'letter'}"
-              bind:checked="{preventSameLetter}"
+              disabled={gameMode !== 'letter'}
+              bind:checked={preventSameLetter}
             />
             Empêcher les joueurs de tomber deux fois de suite sur la même lettre
           </label>
@@ -458,7 +465,11 @@
     </div>
   </div>
   <div class="is-center">
-    <button class="button is-fullwidth is-primary is-large start-button" on:click="{startGame}" disabled={players.length === 0}>
+    <button
+      class="button is-fullwidth is-primary is-large start-button"
+      on:click={startGame}
+      disabled={players.length === 0}
+    >
       Lancer la partie
     </button>
   </div>
@@ -472,8 +483,8 @@
       {#each cards as card}
         <div class="column is-2-fullhd is-3-desktop is-4-tablet is-12-mobile is-inline-block">
           <div
-            on:click="{() => toggleCard(card)}"
-            class:removed-card="{allowedCards.findIndex(c => c.name === card.name) === -1}"
+            on:click={() => toggleCard(card)}
+            class:removed-card={allowedCards.findIndex(c => c.name === card.name) === -1}
           >
             <Card {card} />
           </div>

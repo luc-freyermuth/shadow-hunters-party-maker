@@ -1,4 +1,4 @@
-import { Character } from "./character.types";
+import { Character } from './character.types';
 
 export interface PeerConfig {
   host?: string;
@@ -20,6 +20,6 @@ export interface GameConfig {
       propositionsHaveSameLetter?: boolean;
       preventSamePlayed?: boolean;
       preventSamePropositions?: boolean;
-    }
-  }
+    };
+  };
 }

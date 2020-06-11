@@ -33,7 +33,7 @@ export class PeerHost {
       this.peer.on('error', error => {
         reject(error);
       });
-    })
+    });
   }
 
   handleNewConnection(connection: Peer.DataConnection) {
@@ -107,7 +107,10 @@ export class PeerHost {
 
     let cards = gameConfig.cards;
     if (gameConfig.options.excludeAllPreviouslyPlayedCards) {
-      const previouslyPlayedCardNames = this.players.map(p => p.previousCard).filter(card => !!card).map(card => card.name);
+      const previouslyPlayedCardNames = this.players
+        .map(p => p.previousCard)
+        .filter(card => !!card)
+        .map(card => card.name);
       cards = cards.filter(card => !previouslyPlayedCardNames.includes(card.name));
     }
 
@@ -134,8 +137,6 @@ export class PeerHost {
         break;
     }
     // TODO : double and letter modes
-
-
   }
 
   createTeams(shadowHuntersCount: number): Teams {
@@ -144,10 +145,16 @@ export class PeerHost {
       hunter: shuffledPlayers.slice(0, shadowHuntersCount),
       shadow: shuffledPlayers.slice(shadowHuntersCount, shadowHuntersCount * 2),
       neutral: shuffledPlayers.slice(shadowHuntersCount * 2, shuffledPlayers.length)
-    }
+    };
   }
 
-  setPlayersRandomCardForSingleMode(cards: Character[], teams: Teams, onlyOneWithSameLetter: boolean, preventSame: boolean, preventSameLetter: boolean) {
+  setPlayersRandomCardForSingleMode(
+    cards: Character[],
+    teams: Teams,
+    onlyOneWithSameLetter: boolean,
+    preventSame: boolean,
+    preventSameLetter: boolean
+  ) {
     for (const [teamName, teamMembers] of Object.entries(teams)) {
       let foundSolution = false;
       while (!foundSolution) {
@@ -157,18 +164,26 @@ export class PeerHost {
             let teamMemberChoices: Character[] = [...remainingCards];
 
             if (preventSame && teamMember.previousCard) {
-              teamMemberChoices = teamMemberChoices.filter(card => card.name !== teamMember.previousCard.name);
+              teamMemberChoices = teamMemberChoices.filter(
+                card => card.name !== teamMember.previousCard.name
+              );
             }
             if (preventSameLetter && teamMember.previousCard) {
-              teamMemberChoices = teamMemberChoices.filter(card => !card.name.startsWith(teamMember.previousCard.name.slice(0, 1)));
+              teamMemberChoices = teamMemberChoices.filter(
+                card => !card.name.startsWith(teamMember.previousCard.name.slice(0, 1))
+              );
             }
 
             teamMember.currentCard = this.shuffleArray(teamMemberChoices).shift();
 
-            remainingCards = remainingCards.filter(card => card.name !== teamMember.currentCard.name);
+            remainingCards = remainingCards.filter(
+              card => card.name !== teamMember.currentCard.name
+            );
 
             if (onlyOneWithSameLetter) {
-              remainingCards = remainingCards.filter(card => !card.name.startsWith(teamMember.currentCard.name.slice(0, 1)));
+              remainingCards = remainingCards.filter(
+                card => !card.name.startsWith(teamMember.currentCard.name.slice(0, 1))
+              );
             }
           }
           foundSolution = true;
@@ -183,13 +198,20 @@ export class PeerHost {
     this.players.forEach(player => {
       player.previousCard = {
         ...player.currentCard
-      }
+      };
       this.setPlayerLocationAsCurrentCard(player);
       this.sendPlayerToItsLocation(player);
     });
   }
 
-  setPlayersRandomChoicesForDoubleMode(cards: Character[], teams: Teams, onlyOneWithSameLetter: boolean, propositionsHaveSameLetter: boolean, preventSamePlayed: boolean, preventSamePropositions: boolean) {
+  setPlayersRandomChoicesForDoubleMode(
+    cards: Character[],
+    teams: Teams,
+    onlyOneWithSameLetter: boolean,
+    propositionsHaveSameLetter: boolean,
+    preventSamePlayed: boolean,
+    preventSamePropositions: boolean
+  ) {
     for (const [teamName, teamMembers] of Object.entries(teams)) {
       let foundSolution = false;
       while (!foundSolution) {
@@ -199,21 +221,32 @@ export class PeerHost {
             let teamMemberChoices: Character[] = [...remainingCards];
 
             if (preventSamePlayed && teamMember.previousCard) {
-              teamMemberChoices = teamMemberChoices.filter(card => card.name !== teamMember.previousCard.name);
+              teamMemberChoices = teamMemberChoices.filter(
+                card => card.name !== teamMember.previousCard.name
+              );
             }
             if (preventSamePropositions && teamMember.previousChoices.length) {
-              teamMemberChoices = teamMemberChoices.filter(card => !teamMember.previousChoices.map(c => c.name).includes(card.name));
+              teamMemberChoices = teamMemberChoices.filter(
+                card => !teamMember.previousChoices.map(c => c.name).includes(card.name)
+              );
             }
 
             if (onlyOneWithSameLetter || propositionsHaveSameLetter) {
               const firstCard = this.shuffleArray(teamMemberChoices).shift();
-              const choicesForSecond = teamMemberChoices.filter(card => card.name.startsWith(firstCard.name.slice(0,1)) && card.name !== firstCard.name);
+              const choicesForSecond = teamMemberChoices.filter(
+                card =>
+                  card.name.startsWith(firstCard.name.slice(0, 1)) && card.name !== firstCard.name
+              );
               const secondCard = this.shuffleArray(choicesForSecond).shift();
               teamMember.currentChoices = [firstCard, secondCard];
-              remainingCards = remainingCards.filter(card => !card.name.startsWith(firstCard.name.slice(0,1)));
+              remainingCards = remainingCards.filter(
+                card => !card.name.startsWith(firstCard.name.slice(0, 1))
+              );
             } else {
-              teamMember.currentChoices = this.shuffleArray(teamMemberChoices).slice(0,2);
-              remainingCards = remainingCards.filter(card => !teamMember.currentChoices.map(c => c.name).includes(card.name));
+              teamMember.currentChoices = this.shuffleArray(teamMemberChoices).slice(0, 2);
+              remainingCards = remainingCards.filter(
+                card => !teamMember.currentChoices.map(c => c.name).includes(card.name)
+              );
             }
           }
           foundSolution = true;
@@ -226,9 +259,7 @@ export class PeerHost {
     }
 
     this.players.forEach(player => {
-      player.previousChoices = [
-        ...player.currentChoices
-      ]
+      player.previousChoices = [...player.currentChoices];
       this.setPlayerLocationAsCurrentChoices(player);
       this.sendPlayerToItsLocation(player);
     });
@@ -247,12 +278,15 @@ export class PeerHost {
     player.location = {
       room: 'choice',
       roomData: player.currentChoices
-    }
+    };
   }
 
   removePlayer(player: Player) {
     if (this.players.findIndex(p => p.name === player.name) > -1) {
-      this.players.splice(this.players.findIndex(p => p.name === player.name), 1);
+      this.players.splice(
+        this.players.findIndex(p => p.name === player.name),
+        1
+      );
       const conn = this.getConnectionByPlayer(player);
       if (conn) {
         conn.close();
@@ -319,20 +353,23 @@ export class PeerHost {
       connection.send({
         type,
         data
-      })
+      });
     });
   }
 
   broadcastPlayersList() {
-    this.broadcast('playersList', this.players.map(player => {
-      return {
-        name: player.name,
-        isConnected: player.peerId !== null
-      }
-    }));
+    this.broadcast(
+      'playersList',
+      this.players.map(player => {
+        return {
+          name: player.name,
+          isConnected: player.peerId !== null
+        };
+      })
+    );
   }
 
-  shuffleArray<T>(array:T[]): T[] {
+  shuffleArray<T>(array: T[]): T[] {
     const a = [...array];
     for (let k = 0; k < 1000; k++) {
       for (let i = a.length - 1; i > 0; i--) {

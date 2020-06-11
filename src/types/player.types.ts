@@ -1,4 +1,4 @@
-import { Character } from "./character.types";
+import { Character } from './character.types';
 
 export interface Player {
   name: string;
@@ -10,7 +10,7 @@ export interface Player {
   location: {
     room: string;
     roomData: any;
-  }
+  };
 }
 
 export interface PlayerInfo {

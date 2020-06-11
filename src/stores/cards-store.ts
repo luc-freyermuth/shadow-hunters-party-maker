@@ -8,5 +8,5 @@ export const cardsStore: Readable<Character[]> = readable([], set => {
     })
     .then(data => {
       set(data);
-    })
+    });
 });

@@ -1,5 +1,3 @@
 {
-  "editor.tabSize": 2,
-  "svelte.plugin.typescript.enable": true,
-  "svelte.plugin.typescript.hover.enable": true
+  "editor.tabSize": 2
 }
