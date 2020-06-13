@@ -1,4 +1,5 @@
-<script lang="typescript">import { downloadJson } from '../utils/json-files';
+<script lang="typescript">
+  import { downloadJson, readJsonFromFile } from '../utils/json-files';
 
   import { getPeerHost, PeerHost } from '../peer2peer/peer-host';
   import { onMount } from 'svelte';
@@ -15,6 +16,8 @@
   let players: Player[] = [];
   let cards: Character[] = [];
   let allowedCards: Character[] = [];
+
+  let statsFilePicker: HTMLInputElement;
 
   // Game options //
   let gameMode: string = 'single';
@@ -170,6 +173,14 @@
   function saveStats() {
     downloadJson(peerHost.getStats(), 'stats_shadow_hunters_' + new Date().toISOString());
   }
+
+  function loadStats() {
+    if (statsFilePicker.files && statsFilePicker.files.length === 1) {
+      readJsonFromFile(statsFilePicker.files[0]).then(stats => {
+        peerHost.setStats(stats);
+      });
+    }
+  }
 </script>
 
 <style>
@@ -270,6 +281,10 @@
 
   .removed-card {
     opacity: 0.6;
+  }
+
+  .no-display {
+    display: none;
   }
 </style>
 
@@ -482,12 +497,13 @@
       </div>
 
       <div class="column is-5 is-inline-block">
-        <button class="button is-fullwidth is-primary">
+        <button class="button is-fullwidth is-primary" on:click={() => statsFilePicker.click()}>
           <span class="icon centered-button-icon">
             <i class="gg-software-upload" />
           </span>
           Charger des statistiques
         </button>
+        <input type="file" class="no-display" bind:this={statsFilePicker} on:change={loadStats}/>
       </div>
 
       <div class="column is-5 is-inline-block">

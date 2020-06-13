@@ -393,6 +393,11 @@ export class PeerHost {
     return this.stats;
   }
 
+  setStats(stats: Stats) {
+    this.stats = stats;
+    console.log('loaded stats', stats);
+  }
+
   registerPick(player: Player) {
     this.stats.picks.push({
       name: player.name,
