@@ -89,3 +89,7 @@ button.is-fullwidth {
 .list .list-item:not(:last-child) {
   border-bottom: 1px solid rgba(200, 200, 200, 0.3)
 }
+
+.button .centered-button-icon.icon:first-child:last-child {
+  margin: 0;
+}

@@ -3,18 +3,24 @@ import { Teams, Player } from '../types/player.types';
 import Peer from '../types/peer';
 import { GameConfig } from '../types/config.types';
 import { Character } from '../types/character.types';
+import { Stats } from '../types/stats.types';
 
 export class PeerHost {
   peer: Peer;
   connections: Peer.DataConnection[];
   players: Player[];
   players$: Subject<Player[]>;
+  stats: Stats;
 
   constructor() {
     this.peer = null;
     this.connections = [];
     this.players = [];
     this.players$ = new Subject();
+    this.stats = {
+      picks: [],
+      feedbacks: []
+    };
   }
 
   start(peerConfig): Promise<string> {
@@ -327,6 +333,7 @@ export class PeerHost {
     const currentCard = player.currentChoices.find(card => card.name === cardName);
     if (!currentCard) return;
     player.currentCard = currentCard;
+    this.registerPick(player);
     this.setPlayerLocationAsCurrentCard(player);
     this.sendPlayerToItsLocation(player);
   }
@@ -378,6 +385,21 @@ export class PeerHost {
       }
     }
     return a;
+  }
+
+  // Manage stats
+
+  getStats(): Stats {
+    return this.stats;
+  }
+
+  registerPick(player: Player) {
+    this.stats.picks.push({
+      name: player.name,
+      date: new Date().toISOString(),
+      choices: player.currentChoices.map(card => card.name),
+      pick: player.currentCard.name
+    });
   }
 }
 
