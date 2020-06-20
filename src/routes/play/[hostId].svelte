@@ -23,7 +23,7 @@
   let choices = [];
   let players = [];
 
-  let isSendingFeedback = true;
+  let isSendingFeedback = false;
 
   onMount(() => {
     createPeer();
@@ -112,6 +112,10 @@
   function sendFeedback(event) {
     console.log(event.detail);
     isSendingFeedback = false;
+  }
+
+  function requestFeedbackModal() {
+    isSendingFeedback = true;
   }
 </script>
 
@@ -241,6 +245,7 @@
       <div class="is-vertical-center">
         <div class="card-container" in:fade out:fade>
           <Card card={currentCard} />
+          <button class="button is-primary is-fullwidth mt-4" on:click={requestFeedbackModal}>Terminer la partie</button>
         </div>
       </div>
     {/if}
@@ -261,5 +266,5 @@
 </div>
 
 {#if isSendingFeedback}
-  <FeedbackModal on:pickedFeedback={sendFeedback} />
+  <FeedbackModal on:pickedFeedback={sendFeedback} on:close={() => isSendingFeedback = false} />
 {/if}

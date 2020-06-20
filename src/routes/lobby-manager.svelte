@@ -224,6 +224,10 @@
     margin-top: 0.2rem;
   }
 
+  .options-form .control {
+    text-align: left;
+  }
+
   .options-form .control:not(:first-child) {
     margin-top: 1rem;
   }

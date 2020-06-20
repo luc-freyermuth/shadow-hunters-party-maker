@@ -1,5 +1,6 @@
 <script lang="typescript">
   import { createEventDispatcher } from 'svelte';
+  import { fade } from 'svelte/transition';
 
   let win: boolean = null;
   let funLevel: number = null;
@@ -11,6 +12,10 @@
 
   function pickedFeedback() {
     dispatch('pickedFeedback', { win, funLevel });
+  }
+
+  function close() {
+    dispatch('close');
   }
 </script>
 
@@ -88,12 +93,12 @@
   }
 </style>
 
-<div class="modal is-active">
+<div class="modal is-active" transition:fade>
   <div class="modal-background" />
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">Retour d'expérience</p>
-      <button class="delete" aria-label="close" />
+      <button class="delete" aria-label="close" on:click={close} />
     </header>
     <section class="modal-card-body is-center">
       <div class="buttons has-addons">
