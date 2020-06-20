@@ -1,6 +1,17 @@
 <script lang="typescript">
+  import { createEventDispatcher } from 'svelte';
+
   let win: boolean = null;
   let funLevel: number = null;
+
+  let formIsValid: boolean;
+  $: formIsValid = win !== null && funLevel !== null;
+
+  const dispatch = createEventDispatcher();
+
+  function pickedFeedback() {
+    dispatch('pickedFeedback', { win, funLevel })
+  }
 </script>
 
 <style>
@@ -22,20 +33,32 @@
     font-size: 3rem;
     color: #444;
     transition: all 0.2s;
+    font-family: 'FontAwesome';
   }
 
   input.star:checked ~ label.star:before {
-    content: '★';
-    color: #fd4;
+    content: '\f005';
     transition: all 0.25s;
   }
 
   input.star-5:checked ~ label.star:before {
-    color: #fe7;
+    color: #ffee77;
+  }
+
+  input.star-4:checked ~ label.star:before {
+    color: #ffd054;
+  }
+
+  input.star-3:checked ~ label.star:before {
+    color: #ffb038;
+  }
+
+  input.star-2:checked ~ label.star:before {
+    color: #ff8d26;
   }
 
   input.star-1:checked ~ label.star:before {
-    color: #f62;
+    color: #ff6622;
   }
 
   label.star:hover {
@@ -43,14 +66,13 @@
   }
 
   label.star:before {
-    content: '★';
-    color: black;
+    content: '\f006';
+    color: #444;
   }
 
   section {
     color: black;
   }
-
 </style>
 
 <div class="modal is-active">
@@ -73,29 +95,63 @@
           Défaite
         </button>
       </div>
-<!-- 
+      <!-- 
       <h2 class="title is-2">La partie t'a plu ?</h2> -->
 
       <div class="stars">
-          <input class="star star-5" id="star-5" type="radio" name="star" bind:group={funLevel} value={5} />
-          <label class="star star-5" for="star-5" />
-          <input class="star star-4" id="star-4" type="radio" name="star" bind:group={funLevel} value={4} />
-          <label class="star star-4" for="star-4" />
-          <input class="star star-3" id="star-3" type="radio" name="star" bind:group={funLevel} value={3} />
-          <label class="star star-3" for="star-3" />
-          <input class="star star-2" id="star-2" type="radio" name="star" bind:group={funLevel} value={2} />
-          <label class="star star-2" for="star-2" /> 
-          <input class="star star-1" id="star-1" type="radio" name="star" bind:group={funLevel} value={1} />
-          <label class="star star-1" for="star-1" />
+        <input
+          class="star star-5"
+          id="star-5"
+          type="radio"
+          name="star"
+          bind:group={funLevel}
+          value={5}
+        />
+        <label class="star star-5" for="star-5" />
+        <input
+          class="star star-4"
+          id="star-4"
+          type="radio"
+          name="star"
+          bind:group={funLevel}
+          value={4}
+        />
+        <label class="star star-4" for="star-4" />
+        <input
+          class="star star-3"
+          id="star-3"
+          type="radio"
+          name="star"
+          bind:group={funLevel}
+          value={3}
+        />
+        <label class="star star-3" for="star-3" />
+        <input
+          class="star star-2"
+          id="star-2"
+          type="radio"
+          name="star"
+          bind:group={funLevel}
+          value={2}
+        />
+        <label class="star star-2" for="star-2" />
+        <input
+          class="star star-1"
+          id="star-1"
+          type="radio"
+          name="star"
+          bind:group={funLevel}
+          value={1}
+        />
+        <label class="star star-1" for="star-1" />
       </div>
 
-      <p></p>
+      <p />
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-primary is-fullwidth" disabled={win === null || funLevel === null}>
+      <button class="button is-primary is-fullwidth" disabled={!formIsValid} on:click={pickedFeedback}>
         Valider
       </button>
     </footer>
   </div>
-  <button class="modal-close is-large" aria-label="close" />
 </div>

@@ -23,7 +23,7 @@
   let choices = [];
   let players = [];
 
-  let isSendingFeedback = false;
+  let isSendingFeedback = true;
 
   onMount(() => {
     createPeer();
@@ -107,6 +107,11 @@
       action: 'chooseCard',
       data: card.name
     });
+  }
+
+  function sendFeedback(event) {
+    console.log(event.detail);
+    isSendingFeedback = false;
   }
 </script>
 
@@ -255,6 +260,6 @@
   {/if}
 </div>
 
-{#if !isSendingFeedback}
-  <FeedbackModal />
+{#if isSendingFeedback}
+  <FeedbackModal on:pickedFeedback={sendFeedback} />
 {/if}
