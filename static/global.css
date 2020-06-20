@@ -93,3 +93,7 @@ button.is-fullwidth {
 .button .centered-button-icon.icon:first-child:last-child {
   margin: 0;
 }
+
+.modal-card {
+  max-width: calc(100vw - 40px);
+}

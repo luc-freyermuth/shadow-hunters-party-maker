@@ -6,8 +6,9 @@
 </script>
 
 <script>
-  import { onMount } from 'svelte';
   import Card from '../../components/Card.svelte';
+  import FeedbackModal from '../../components/FeedbackModal.svelte';
+  import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
 
   export let hostId;
@@ -21,6 +22,8 @@
   let currentCard;
   let choices = [];
   let players = [];
+
+  let isSendingFeedback = false;
 
   onMount(() => {
     createPeer();
@@ -251,3 +254,7 @@
     {/if}
   {/if}
 </div>
+
+{#if !isSendingFeedback}
+  <FeedbackModal />
+{/if}
