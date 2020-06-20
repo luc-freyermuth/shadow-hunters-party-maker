@@ -1,22 +1,37 @@
 <script lang="typescript">
   import { Character } from '../types/character.types';
+  import { beforeUpdate } from 'svelte';
 
   export let card: Character = null;
-  let hasError = false;
-  let isLoading = true;
+  let hasError: boolean = false;
+  let isLoading: boolean = true;
 
-  $: {
-    card;
+  let picture: string;
+  let fallbacks: string[] = [];
+
+  let pictureUrl: string;
+
+  $: pictureUrl = 'cards/images/' + picture;
+
+  beforeUpdate(() => {
+    picture = card.image;
+    fallbacks = card.imageFallbacks ? [...card.imageFallbacks] : [];
     hasError = false;
-  }
+  });
 
   function afterLoad() {
     isLoading = false;
   }
 
   function onError() {
-    isLoading = false;
-    hasError = true;
+    console.log('error', card.name, fallbacks);
+    if (fallbacks.length === 0) {
+      isLoading = false;
+      hasError = true;
+    } else {
+      picture = fallbacks.shift();
+      console.log(picture);
+    }
   }
 </script>
 
@@ -76,7 +91,7 @@
   <div class="aspect-ratio-box-inside">
     {#if !hasError}
       <img
-        src={'cards/images/' + card.image}
+        src={pictureUrl}
         alt={'card ' + card.name}
         on:error={onError}
         on:load={afterLoad}
