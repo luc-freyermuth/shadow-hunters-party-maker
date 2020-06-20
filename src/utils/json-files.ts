@@ -1,5 +1,5 @@
 export function downloadJson(object: any, filename: string): void {
-  const blob = new Blob([JSON.stringify(object)], { type: 'text/plain;charset=utf-8' });
+  const blob = new Blob([JSON.stringify(object, null, 2)], { type: 'text/plain;charset=utf-8' });
 
   var url = window.URL || window.webkitURL;
   var a = document.createElement('a');

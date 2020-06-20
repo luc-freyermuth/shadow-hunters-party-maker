@@ -8,8 +8,9 @@ export interface PickStat {
 export interface FeedbackStat {
   name: string;
   date: string;
-  fun: number;
+  pick: string;
   win: boolean;
+  funLevel: number;
 }
 
 export interface Stats {

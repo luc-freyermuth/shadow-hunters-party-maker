@@ -98,6 +98,10 @@ button.is-fullwidth {
   max-width: calc(100vw - 40px);
 }
 
+.list-item {
+  padding: 0.5em 1em;
+}
+
 @font-face {
   font-family: "FontAwesome";
   src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff") format("woff");

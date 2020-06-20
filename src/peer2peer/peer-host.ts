@@ -82,6 +82,8 @@ export class PeerHost {
       case 'chooseCard':
         this.chooseCard(connection, data);
         break;
+      case 'feedback':
+        this.feedback(connection, data);
       default:
         console.error(`No action with type: ${type}`);
     }
@@ -273,6 +275,13 @@ export class PeerHost {
     console.log(this.players);
   }
 
+  setPlayerLocationAsLobby(player: Player) {
+    player.location = {
+      room: 'lobby',
+      roomData: null
+    }
+  }
+
   setPlayerLocationAsCurrentCard(player: Player) {
     player.location = {
       room: 'currentCard',
@@ -335,6 +344,13 @@ export class PeerHost {
     player.currentCard = currentCard;
     this.registerPick(player);
     this.setPlayerLocationAsCurrentCard(player);
+    this.sendPlayerToItsLocation(player);
+  }
+
+  feedback(connection: Peer.DataConnection, feedback: { funLevel: number, win: boolean }) {
+    const player = this.getPlayerByConnection(connection);
+    this.registerFeedback(player, feedback);
+    this.setPlayerLocationAsLobby(player);
     this.sendPlayerToItsLocation(player);
   }
 
@@ -404,6 +420,16 @@ export class PeerHost {
       date: new Date().toISOString(),
       choices: player.currentChoices.map(card => card.name),
       pick: player.currentCard.name
+    });
+  }
+
+  registerFeedback(player: Player, feedback: { win: boolean; funLevel: number }) {
+    this.stats.feedbacks.push({
+      name: player.name,
+      date: new Date().toISOString(),
+      pick: player.currentCard.name,
+      win: feedback.win,
+      funLevel: feedback.funLevel
     });
   }
 }

@@ -110,7 +110,10 @@
   }
 
   function sendFeedback(event) {
-    console.log(event.detail);
+    connectionToHost.send({
+      action: 'feedback',
+      data: event.detail
+    });
     isSendingFeedback = false;
   }
 
