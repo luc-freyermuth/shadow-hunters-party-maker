@@ -27,6 +27,9 @@ export class PeerHost {
     return new Promise((resolve, reject) => {
       this.peer = new Peer(peerConfig);
       this.peer.on('open', id => {
+        if (localStorage.getItem('STATS')) {
+          this.stats = JSON.parse(localStorage.getItem('STATS'));
+        }
         resolve(id);
       });
       this.peer.on('connection', connection => {
@@ -421,6 +424,7 @@ export class PeerHost {
       choices: player.currentChoices.map(card => card.name),
       pick: player.currentCard.name
     });
+    localStorage.setItem('STATS', JSON.stringify(this.stats));
   }
 
   registerFeedback(player: Player, feedback: { win: boolean; funLevel: number }) {
@@ -431,6 +435,7 @@ export class PeerHost {
       win: feedback.win,
       funLevel: feedback.funLevel
     });
+    localStorage.setItem('STATS', JSON.stringify(this.stats));
   }
 }
 
