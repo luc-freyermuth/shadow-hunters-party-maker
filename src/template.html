@@ -37,5 +37,8 @@
 	     initialise the router -->
     %sapper.scripts%
     <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.2.0/peerjs.min.js"></script>
+    <script>
+      if('serviceWorker' in navigator)navigator.serviceWorker.register('/service-worker.js')
+    </script>
 </body>
 </html>
