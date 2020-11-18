@@ -13,11 +13,12 @@
 
   $: pictureUrl = 'cards/images/' + picture;
 
-  beforeUpdate(() => {
+  $: {
+    card;
     picture = card.image;
     fallbacks = card.imageFallbacks ? [...card.imageFallbacks] : [];
     hasError = false;
-  });
+  }
 
   function afterLoad() {
     isLoading = false;
