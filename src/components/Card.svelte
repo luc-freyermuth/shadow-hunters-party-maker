@@ -12,7 +12,7 @@
   let pictureUrl: string;
 
   $: pictureUrl = 'cards/images/' + picture;
-  
+
   $: {
     card;
     picture = card.image;
