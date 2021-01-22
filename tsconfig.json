@@ -1,15 +1,27 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": [
-      "es5", "es6", "dom", "es2017"
-    ],
-    "allowSyntheticDefaultImports": true
+    "moduleResolution": "node",
+    "target": "es2017",
+    /**
+			svelte-preprocess cannot figure out whether you have a value or a type, so tell TypeScript
+			to enforce using `import type` instead of `import` for Types.
+			*/
+    "importsNotUsedAsValues": "error",
+    "isolatedModules": true,
+    /**
+			To have warnings/errors of the Svelte compiler at the correct position,
+			enable source maps by default.
+			*/
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "$components/*": ["./src/components/*"],
+      "$stores/*": ["./src/stores/*"]
+    }
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules/*", ".svelte"]
 }

@@ -1,9 +1,8 @@
-import { Subject } from 'rxjs';
-import { Teams, Player } from '../types/player.types';
-import Peer from '../types/peer';
-import { GameConfig } from '../types/config.types';
-import { Character } from '../types/character.types';
-import { Stats } from '../types/stats.types';
+import type { Teams, Player } from "../types/player.types";
+import type { GameConfig } from "../types/config.types";
+import type { Character } from "../types/character.types";
+import type { Stats } from "../types/stats.types";
+import { Subject } from "rxjs";
 
 export class PeerHost {
   peer: Peer;
@@ -19,27 +18,27 @@ export class PeerHost {
     this.players$ = new Subject();
     this.stats = {
       picks: [],
-      feedbacks: []
+      feedbacks: [],
     };
   }
 
   start(peerConfig): Promise<string> {
     return new Promise((resolve, reject) => {
       this.peer = new Peer(peerConfig);
-      this.peer.on('open', id => {
-        if (localStorage.getItem('STATS')) {
-          this.stats = JSON.parse(localStorage.getItem('STATS'));
+      this.peer.on("open", (id) => {
+        if (localStorage.getItem("STATS")) {
+          this.stats = JSON.parse(localStorage.getItem("STATS"));
         }
         resolve(id);
       });
-      this.peer.on('connection', connection => {
+      this.peer.on("connection", (connection) => {
         this.handleNewConnection(connection);
       });
-      this.peer.on('disconnected', () => {
-        console.log('Peer server disconnected');
+      this.peer.on("disconnected", () => {
+        console.log("Peer server disconnected");
         this.peer.reconnect();
       });
-      this.peer.on('error', error => {
+      this.peer.on("error", (error) => {
         reject(error);
       });
     });
@@ -47,8 +46,8 @@ export class PeerHost {
 
   handleNewConnection(connection: Peer.DataConnection) {
     this.connections.push(connection);
-    connection.on('data', data => {
-      console.log('got message from client', data);
+    connection.on("data", (data) => {
+      console.log("got message from client", data);
       if (data.request) {
         this.handleRequest(connection, data.request, data.data);
       }
@@ -56,7 +55,7 @@ export class PeerHost {
         this.handleAction(connection, data.action, data.data);
       }
     });
-    connection.on('close', () => {
+    connection.on("close", () => {
       this.handleConnectionClosure(connection);
     });
   }
@@ -79,13 +78,13 @@ export class PeerHost {
 
   handleAction(connection: Peer.DataConnection, type: string, data: any) {
     switch (type) {
-      case 'pickName':
+      case "pickName":
         this.pickName(connection, data);
         break;
-      case 'chooseCard':
+      case "chooseCard":
         this.chooseCard(connection, data);
         break;
-      case 'feedback':
+      case "feedback":
         this.feedback(connection, data);
       default:
         console.error(`No action with type: ${type}`);
@@ -93,18 +92,20 @@ export class PeerHost {
   }
 
   getPlayerByName(name: string): Player {
-    return this.players.find(player => player.name === name);
+    return this.players.find((player) => player.name === name);
   }
 
   getPlayerByConnection(connection: Peer.DataConnection): Player {
     if (connection) {
-      return this.players.find(player => player.peerId === connection.peer);
+      return this.players.find((player) => player.peerId === connection.peer);
     }
   }
 
   getConnectionByPlayer(player: Player): Peer.DataConnection {
     if (player) {
-      return this.connections.find(connection => connection.peer === player.peerId);
+      return this.connections.find(
+        (connection) => connection.peer === player.peerId
+      );
     }
   }
 
@@ -119,14 +120,16 @@ export class PeerHost {
     let cards = gameConfig.cards;
     if (gameConfig.options.excludeAllPreviouslyPlayedCards) {
       const previouslyPlayedCardNames = this.players
-        .map(p => p.previousCard)
-        .filter(card => !!card)
-        .map(card => card.name);
-      cards = cards.filter(card => !previouslyPlayedCardNames.includes(card.name));
+        .map((p) => p.previousCard)
+        .filter((card) => !!card)
+        .map((card) => card.name);
+      cards = cards.filter(
+        (card) => !previouslyPlayedCardNames.includes(card.name)
+      );
     }
 
     switch (gameConfig.options.mode) {
-      case 'single':
+      case "single":
         this.setPlayersRandomCardForSingleMode(
           cards,
           teams,
@@ -136,7 +139,7 @@ export class PeerHost {
         );
         break;
 
-      case 'double':
+      case "double":
         this.setPlayersRandomChoicesForDoubleMode(
           cards,
           teams,
@@ -155,7 +158,10 @@ export class PeerHost {
     return {
       hunter: shuffledPlayers.slice(0, shadowHuntersCount),
       shadow: shuffledPlayers.slice(shadowHuntersCount, shadowHuntersCount * 2),
-      neutral: shuffledPlayers.slice(shadowHuntersCount * 2, shuffledPlayers.length)
+      neutral: shuffledPlayers.slice(
+        shadowHuntersCount * 2,
+        shuffledPlayers.length
+      ),
     };
   }
 
@@ -169,46 +175,54 @@ export class PeerHost {
     for (const [teamName, teamMembers] of Object.entries(teams)) {
       let foundSolution = false;
       while (!foundSolution) {
-        let remainingCards: Character[] = cards.filter(card => card.team === teamName);
+        let remainingCards: Character[] = cards.filter(
+          (card) => card.team === teamName
+        );
         try {
           for (const teamMember of teamMembers) {
             let teamMemberChoices: Character[] = [...remainingCards];
 
             if (preventSame && teamMember.previousCard) {
               teamMemberChoices = teamMemberChoices.filter(
-                card => card.name !== teamMember.previousCard.name
+                (card) => card.name !== teamMember.previousCard.name
               );
             }
             if (preventSameLetter && teamMember.previousCard) {
               teamMemberChoices = teamMemberChoices.filter(
-                card => !card.name.startsWith(teamMember.previousCard.name.slice(0, 1))
+                (card) =>
+                  !card.name.startsWith(
+                    teamMember.previousCard.name.slice(0, 1)
+                  )
               );
             }
 
-            teamMember.currentCard = this.shuffleArray(teamMemberChoices).shift();
+            teamMember.currentCard = this.shuffleArray(
+              teamMemberChoices
+            ).shift();
 
             remainingCards = remainingCards.filter(
-              card => card.name !== teamMember.currentCard.name
+              (card) => card.name !== teamMember.currentCard.name
             );
 
             if (onlyOneWithSameLetter) {
               remainingCards = remainingCards.filter(
-                card => !card.name.startsWith(teamMember.currentCard.name.slice(0, 1))
+                (card) =>
+                  !card.name.startsWith(teamMember.currentCard.name.slice(0, 1))
               );
             }
           }
           foundSolution = true;
         } catch (error) {
           console.warn(error);
-          console.log('solution not found, retrying');
+          console.log("solution not found, retrying");
           foundSolution = false;
         }
       }
     }
 
-    this.players.forEach(player => {
+    this.players.forEach((player) => {
       player.previousCard = {
-        ...player.currentCard
+        ...player.currentCard,
       };
       this.setPlayerLocationAsCurrentCard(player);
       this.sendPlayerToItsLocation(player);
@@ -226,50 +240,61 @@ export class PeerHost {
     for (const [teamName, teamMembers] of Object.entries(teams)) {
       let foundSolution = false;
       while (!foundSolution) {
-        let remainingCards: Character[] = cards.filter(card => card.team === teamName);
+        let remainingCards: Character[] = cards.filter(
+          (card) => card.team === teamName
+        );
         try {
           for (const teamMember of teamMembers) {
             let teamMemberChoices: Character[] = [...remainingCards];
 
             if (preventSamePlayed && teamMember.previousCard) {
               teamMemberChoices = teamMemberChoices.filter(
-                card => card.name !== teamMember.previousCard.name
+                (card) => card.name !== teamMember.previousCard.name
               );
             }
             if (preventSamePropositions && teamMember.previousChoices.length) {
               teamMemberChoices = teamMemberChoices.filter(
-                card => !teamMember.previousChoices.map(c => c.name).includes(card.name)
+                (card) =>
+                  !teamMember.previousChoices
+                    .map((c) => c.name)
+                    .includes(card.name)
               );
             }
 
             if (onlyOneWithSameLetter || propositionsHaveSameLetter) {
               const firstCard = this.shuffleArray(teamMemberChoices).shift();
               const choicesForSecond = teamMemberChoices.filter(
-                card =>
-                  card.name.startsWith(firstCard.name.slice(0, 1)) && card.name !== firstCard.name
+                (card) =>
+                  card.name.startsWith(firstCard.name.slice(0, 1)) &&
+                  card.name !== firstCard.name
               );
               const secondCard = this.shuffleArray(choicesForSecond).shift();
               teamMember.currentChoices = [firstCard, secondCard];
               remainingCards = remainingCards.filter(
-                card => !card.name.startsWith(firstCard.name.slice(0, 1))
+                (card) => !card.name.startsWith(firstCard.name.slice(0, 1))
               );
             } else {
-              teamMember.currentChoices = this.shuffleArray(teamMemberChoices).slice(0, 2);
+              teamMember.currentChoices = this.shuffleArray(
+                teamMemberChoices
+              ).slice(0, 2);
               remainingCards = remainingCards.filter(
-                card => !teamMember.currentChoices.map(c => c.name).includes(card.name)
+                (card) =>
+                  !teamMember.currentChoices
+                    .map((c) => c.name)
+                    .includes(card.name)
               );
             }
           }
           foundSolution = true;
         } catch (error) {
           console.warn(error);
-          console.log('solution not found, retrying');
+          console.log("solution not found, retrying");
           foundSolution = false;
         }
       }
     }
 
-    this.players.forEach(player => {
+    this.players.forEach((player) => {
       player.previousChoices = [...player.currentChoices];
       this.setPlayerLocationAsCurrentChoices(player);
       this.sendPlayerToItsLocation(player);
@@ -280,29 +305,29 @@ export class PeerHost {
 
   setPlayerLocationAsLobby(player: Player) {
     player.location = {
-      room: 'lobby',
-      roomData: null
-    }
+      room: "lobby",
+      roomData: null,
+    };
   }
 
   setPlayerLocationAsCurrentCard(player: Player) {
     player.location = {
-      room: 'currentCard',
-      roomData: player.currentCard
+      room: "currentCard",
+      roomData: player.currentCard,
     };
   }
 
   setPlayerLocationAsCurrentChoices(player: Player) {
     player.location = {
-      room: 'choice',
-      roomData: player.currentChoices
+      room: "choice",
+      roomData: player.currentChoices,
     };
   }
 
   removePlayer(player: Player) {
-    if (this.players.findIndex(p => p.name === player.name) > -1) {
+    if (this.players.findIndex((p) => p.name === player.name) > -1) {
       this.players.splice(
-        this.players.findIndex(p => p.name === player.name),
+        this.players.findIndex((p) => p.name === player.name),
         1
       );
       const conn = this.getConnectionByPlayer(player);
@@ -329,9 +354,9 @@ export class PeerHost {
         currentChoices: [],
         previousChoices: [],
         location: {
-          room: 'lobby',
-          roomData: null
-        }
+          room: "lobby",
+          roomData: null,
+        },
       };
       this.players.push(newPlayer);
       this.sendPlayerToItsLocation(newPlayer);
@@ -342,7 +367,9 @@ export class PeerHost {
   chooseCard(connection: Peer.DataConnection, cardName: string) {
     const player = this.getPlayerByConnection(connection);
     if (!player) return;
-    const currentCard = player.currentChoices.find(card => card.name === cardName);
+    const currentCard = player.currentChoices.find(
+      (card) => card.name === cardName
+    );
     if (!currentCard) return;
     player.currentCard = currentCard;
     this.registerPick(player);
@@ -350,7 +377,10 @@ export class PeerHost {
     this.sendPlayerToItsLocation(player);
   }
 
-  feedback(connection: Peer.DataConnection, feedback: { funLevel: number, win: boolean }) {
+  feedback(
+    connection: Peer.DataConnection,
+    feedback: { funLevel: number; win: boolean }
+  ) {
     const player = this.getPlayerByConnection(connection);
     this.registerFeedback(player, feedback);
     this.setPlayerLocationAsLobby(player);
@@ -369,27 +399,27 @@ export class PeerHost {
   }
 
   sendGoTo(connection: Peer.DataConnection, whereTo: string, roomData: any) {
-    connection.send({ type: 'goTo', data: { room: whereTo, roomData } });
+    connection.send({ type: "goTo", data: { room: whereTo, roomData } });
   }
 
   // Broadcast //
 
   broadcast(type: string, data: any) {
-    this.connections.forEach(connection => {
+    this.connections.forEach((connection) => {
       connection.send({
         type,
-        data
+        data,
       });
     });
   }
 
   broadcastPlayersList() {
     this.broadcast(
-      'playersList',
-      this.players.map(player => {
+      "playersList",
+      this.players.map((player) => {
         return {
           name: player.name,
-          isConnected: player.peerId !== null
+          isConnected: player.peerId !== null,
         };
       })
     );
@@ -414,28 +444,31 @@ export class PeerHost {
 
   setStats(stats: Stats) {
     this.stats = stats;
-    console.log('loaded stats', stats);
+    console.log("loaded stats", stats);
   }
 
   registerPick(player: Player) {
     this.stats.picks.push({
       name: player.name,
       date: new Date().toISOString(),
-      choices: player.currentChoices.map(card => card.name),
-      pick: player.currentCard.name
+      choices: player.currentChoices.map((card) => card.name),
+      pick: player.currentCard.name,
     });
-    localStorage.setItem('STATS', JSON.stringify(this.stats));
+    localStorage.setItem("STATS", JSON.stringify(this.stats));
   }
 
-  registerFeedback(player: Player, feedback: { win: boolean; funLevel: number }) {
+  registerFeedback(
+    player: Player,
+    feedback: { win: boolean; funLevel: number }
+  ) {
     this.stats.feedbacks.push({
       name: player.name,
       date: new Date().toISOString(),
       pick: player.currentCard.name,
       win: feedback.win,
-      funLevel: feedback.funLevel
+      funLevel: feedback.funLevel,
     });
-    localStorage.setItem('STATS', JSON.stringify(this.stats));
+    localStorage.setItem("STATS", JSON.stringify(this.stats));
   }
 }
 

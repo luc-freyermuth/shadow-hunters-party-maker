@@ -1,8 +1,7 @@
-<script lang="typescript">
-  import { getPeerHost } from '../peer2peer/peer-host';
-  import { goto } from '@sapper/app';
-  import { onMount } from 'svelte';
-  import { PeerConfig } from '../types/config.types';
+<script lang="ts">
+  import { getPeerHost } from "../peer2peer/peer-host";
+  import { onMount } from "svelte";
+  import type { PeerConfig } from "../types/config.types";
 
   const peerHost = getPeerHost();
 
@@ -13,9 +12,12 @@
   let isCreating: boolean;
   let error: boolean;
 
+  // TODO Change this when svelte kit allows to use routing :)
+  let linkToManager: HTMLAnchorElement;
+
   onMount(() => {
-    const localStoredPeerConfig = localStorage.getItem('PEER_CONFIG')
-      ? JSON.parse(localStorage.getItem('PEER_CONFIG'))
+    const localStoredPeerConfig = localStorage.getItem("PEER_CONFIG")
+      ? JSON.parse(localStorage.getItem("PEER_CONFIG"))
       : null;
     if (localStoredPeerConfig) {
       ({ host, port, path, key } = localStoredPeerConfig);
@@ -32,57 +34,78 @@
     peerHost
       .start(peerConfig)
       .then(() => {
-        localStorage.setItem('PEER_CONFIG', JSON.stringify(peerConfig));
-        goto('/lobby-manager');
+        localStorage.setItem("PEER_CONFIG", JSON.stringify(peerConfig));
+        linkToManager.click();
       })
-      .catch(err => {
+      .catch((err) => {
         isCreating = false;
         error = err;
-        console.error('connection error:: ', err);
+        console.error("connection error:: ", err);
       });
   }
 </script>
 
-<style>
-  .limited-width {
-    max-width: 800px;
-  }
-</style>
-
+<a href="/lobby-manager" bind:this={linkToManager} class="invisible">
+  TODO: Remove this
+</a>
 <div class="container is-fluid is-vertical-center limited-width">
   <h2 class="title is-2 is-center">Configuration du salon</h2>
 
   <div class="field">
-    <label>Adresse du serveur de courtage</label>
+    <label for="host">Adresse du serveur de courtage</label>
     <p class="control has-icons-left">
-      <input class="input is-primary" type="text" placeholder="0.peerjs.com" bind:value={host} />
+      <input
+        class="input is-primary"
+        type="text"
+        placeholder="0.peerjs.com"
+        bind:value={host}
+        id="host"
+      />
       <span class="icon is-small is-left">
         <i class="gg-drive" />
       </span>
     </p>
   </div>
   <div class="field">
-    <label>Port du serveur de courtage</label>
+    <label for="port">Port du serveur de courtage</label>
     <p class="control has-icons-left">
-      <input class="input is-primary" type="text" placeholder="443" bind:value={port} />
+      <input
+        class="input is-primary"
+        type="text"
+        placeholder="443"
+        bind:value={port}
+        id="port"
+      />
       <span class="icon is-small is-left">
         <i class="gg-dock-right" />
       </span>
     </p>
   </div>
   <div class="field">
-    <label>Chemin sur le serveur de courtage</label>
+    <label for="path">Chemin sur le serveur de courtage</label>
     <p class="control has-icons-left">
-      <input class="input is-primary" type="text" placeholder="/" bind:value={path} />
+      <input
+        class="input is-primary"
+        type="text"
+        placeholder="/"
+        bind:value={path}
+        id="path"
+      />
       <span class="icon is-small is-left">
         <i class="gg-code-slash" />
       </span>
     </p>
   </div>
   <div class="field">
-    <label>Mot de passe du serveur de courtage</label>
+    <label for="password">Mot de passe du serveur de courtage</label>
     <p class="control has-icons-left">
-      <input class="input is-primary" type="password" placeholder="•••••••••" bind:value={key} />
+      <input
+        class="input is-primary"
+        type="password"
+        placeholder="•••••••••"
+        bind:value={key}
+        id="password"
+      />
       <span class="icon is-small is-left">
         <i class="gg-lock" />
       </span>
@@ -92,10 +115,7 @@
     class="button is-primary is-fullwidth is-small-margin-bottom"
     on:click={createLobby}
     class:is-loading={isCreating}
-    disabled={isCreating}
-  >
-    Créer le salon
-  </button>
+    disabled={isCreating}> Créer le salon </button>
 
   {#if error}
     <div class="message is-danger">
@@ -117,3 +137,9 @@
     </div>
   {/if}
 </div>
+
+<style>
+  .limited-width {
+    max-width: 800px;
+  }
+</style>

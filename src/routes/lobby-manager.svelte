@@ -1,15 +1,14 @@
 <script lang="typescript">
-  import { downloadJson, readJsonFromFile } from '../utils/json-files';
+  import { downloadJson, readJsonFromFile } from "../utils/json-files";
 
-  import { getPeerHost, PeerHost } from '../peer2peer/peer-host';
-  import { onMount } from 'svelte';
-  import { goto } from '@sapper/app';
-  import { cardsStore } from '../stores/cards-store';
-  import Card from '../components/Card.svelte';
-  import copy from 'copy-to-clipboard';
-  import { GameConfig } from '../types/config.types';
-  import { Character } from '../types/character.types';
-  import { Player } from '../types/player.types';
+  import { getPeerHost, PeerHost } from "../peer2peer/peer-host";
+  import { onMount } from "svelte";
+  import { cardsStore } from "../stores/cards-store";
+  import Card from "../components/Card.svelte";
+  import copy from "copy-to-clipboard";
+  import type { GameConfig } from "../types/config.types";
+  import type { Character } from "../types/character.types";
+  import type { Player } from "../types/player.types";
 
   let peerHost: PeerHost;
   let sharableLink: string;
@@ -20,7 +19,7 @@
   let statsFilePicker: HTMLInputElement;
 
   // Game options //
-  let gameMode: string = 'single';
+  let gameMode: string = "single";
   let excludeAllPreviouslyPlayedCards = false;
   let onlyOneWithSameLetter = false;
   let preventSameSingle = false;
@@ -40,26 +39,34 @@
   let shadowHuntersChoices = [0];
   let neutralChoices = [0];
   $: shadowHuntersChoices = [...Array(maxShadowHunters + 1).keys()];
-  $: neutralChoices = shadowHuntersChoices.map(shChoice => players.length - shChoice * 2).reverse();
+  $: neutralChoices = shadowHuntersChoices
+    .map((shChoice) => players.length - shChoice * 2)
+    .reverse();
+
+  let linkToLobby: HTMLAnchorElement;
 
   onMount(() => {
     peerHost = getPeerHost();
     if (!peerHost.peer) {
-      goto('/create-lobby');
+      linkToLobby.click();
       return;
     }
     generateLinkFromPeer(peerHost.peer);
-    peerHost.players$.subscribe(p => {
+    peerHost.players$.subscribe((p) => {
       players = p;
       autoAssignTeams();
     });
-    cardsStore.subscribe(storedCards => {
+    cardsStore.subscribe((storedCards) => {
       cards = [...storedCards];
-      if (!localStorage.getItem('removedCards')) {
+      if (!localStorage.getItem("removedCards")) {
         allowedCards = [...cards];
       } else {
-        const removedCardsNames = JSON.parse(localStorage.getItem('removedCards'));
-        allowedCards = cards.filter(card => !removedCardsNames.includes(card.name));
+        const removedCardsNames = JSON.parse(
+          localStorage.getItem("removedCards")
+        );
+        allowedCards = cards.filter(
+          (card) => !removedCardsNames.includes(card.name)
+        );
       }
     });
   });
@@ -68,21 +75,21 @@
     if (value) {
       return `${key}=${value}`;
     }
-    return '';
+    return "";
   }
 
   function generateLinkFromPeer(peer) {
     sharableLink =
       window.location.origin +
-      '/play/' +
+      "/play/" +
       peer.id +
-      '?' +
+      "?" +
       [
-        generateUrlParam('host', peer.options.host),
-        generateUrlParam('port', peer.options.port),
-        generateUrlParam('path', peer.options.path),
-        generateUrlParam('key', peer.options.key)
-      ].join('&');
+        generateUrlParam("host", peer.options.host),
+        generateUrlParam("port", peer.options.port),
+        generateUrlParam("path", peer.options.path),
+        generateUrlParam("key", peer.options.key),
+      ].join("&");
   }
 
   // prettier-ignore
@@ -110,9 +117,9 @@
   }
 
   function toggleCard(card: Character) {
-    if (allowedCards.findIndex(c => c.name === card.name) > -1) {
+    if (allowedCards.findIndex((c) => c.name === card.name) > -1) {
       allowedCards.splice(
-        allowedCards.findIndex(c => c.name === card.name),
+        allowedCards.findIndex((c) => c.name === card.name),
         1
       );
       allowedCards = [...allowedCards];
@@ -120,44 +127,48 @@
       allowedCards = [...allowedCards, card];
     }
     localStorage.setItem(
-      'removedCards',
+      "removedCards",
       JSON.stringify(
-        cards.map(c => c.name).filter(cardName => !allowedCards.map(c => c.name).includes(cardName))
+        cards
+          .map((c) => c.name)
+          .filter(
+            (cardName) => !allowedCards.map((c) => c.name).includes(cardName)
+          )
       )
     );
   }
 
   function startGame() {
-    let options: GameConfig['options'] = {
+    let options: GameConfig["options"] = {
       excludeAllPreviouslyPlayedCards,
       onlyOneWithSameLetter,
       mode: gameMode,
-      modeOptions: null
+      modeOptions: null,
     };
     switch (options.mode) {
-      case 'single':
+      case "single":
         options.modeOptions = {
           preventSame: preventSameSingle,
-          preventSameLetter: preventSameLetterSingle
+          preventSameLetter: preventSameLetterSingle,
         };
         break;
-      case 'double':
+      case "double":
         options.modeOptions = {
           propositionsHaveSameLetter: propositionsHaveSameLetterDouble,
           preventSamePlayed: preventSamePlayedDouble,
-          preventSamePropositions: preventSamePropositionsDouble
+          preventSamePropositions: preventSamePropositionsDouble,
         };
         break;
-      case 'letter':
+      case "letter":
         options.modeOptions = {
-          preventSamePropositions: preventSameLetter
+          preventSamePropositions: preventSameLetter,
         };
         break;
     }
     const gameConfig: GameConfig = {
       options,
       cards: allowedCards,
-      shadowHuntersCount
+      shadowHuntersCount,
     };
     peerHost.startGame(gameConfig);
   }
@@ -167,21 +178,308 @@
   }
 
   function copyLink() {
-    copy(sharableLink, { message: 'test' });
+    copy(sharableLink, { message: "test" });
   }
 
   function saveStats() {
-    downloadJson(peerHost.getStats(), 'stats_shadow_hunters_' + new Date().toISOString());
+    downloadJson(
+      peerHost.getStats(),
+      "stats_shadow_hunters_" + new Date().toISOString()
+    );
   }
 
   function loadStats() {
     if (statsFilePicker.files && statsFilePicker.files.length === 1) {
-      readJsonFromFile(statsFilePicker.files[0]).then(stats => {
+      readJsonFromFile(statsFilePicker.files[0]).then((stats) => {
         peerHost.setStats(stats);
       });
     }
   }
 </script>
+
+<a href="/create-lobby" bind:this={linkToLobby} class="invisible">
+  TODO: Remove this
+</a>
+
+<div class="container is-fluid">
+  <div class="is-center">
+    <h3 class="title is-3">Partagez ce lien aux joueurs</h3>
+    <h6 class="subtitle is-6 vertical-center">
+      <a href={sharableLink} target="_blank">{sharableLink}</a>
+      <button class="button is-primary" on:click={copyLink}>
+        <span class="icon"> <i class="gg-clipboard" /> </span>
+        <span>Copier le lien</span>
+      </button>
+    </h6>
+  </div>
+
+  <div class="columns is-desktop form">
+    <!-- PLAYERS FORM -->
+    <div class="column is-6-desktop is-12-mobile is-inline-block is-center">
+      <h4 class="title is-4">Équipes</h4>
+      <div class="container is-fluid">
+        <div class="field team-select">
+          <div class="control">
+            <div class="select is-danger">
+              <select
+                bind:value={shadowHuntersCount}
+                on:blur={shadowHuntersCountChanged}>
+                {#each shadowHuntersChoices as choice}
+                  <option value={choice}>
+                    {choice === 0 ? "Aucun" : choice}
+                    shadow{choice > 1 ? "s" : ""}
+                  </option>
+                {/each}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field team-select">
+          <div class="control">
+            <div class="select is-info">
+              <select
+                bind:value={shadowHuntersCount}
+                on:blur={shadowHuntersCountChanged}>
+                {#each shadowHuntersChoices as choice}
+                  <option value={choice}>
+                    {choice === 0 ? "Aucun" : choice}
+                    hunter{choice > 1 ? "s" : ""}
+                  </option>
+                {/each}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field team-select">
+          <div class="control">
+            <div class="select is-warning">
+              <select bind:value={neutralCount} on:blur={neutralCountChanged}>
+                {#each neutralChoices as choice}
+                  <option value={choice}>
+                    {choice === 0 ? "Aucun" : choice}
+                    neutre{choice > 1 ? "s" : ""}
+                  </option>
+                {/each}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="title is-4 title-margin-top">
+        Joueurs ({players.length})
+      </h4>
+      <div class="container is-fluid">
+        {#if players.length}
+          <div class="list">
+            {#each players as player}
+              <div class="list-item">
+                <div class="flex">
+                  <div class="flex-1">
+                    {player.name}
+                    {#if player.peerId}
+                      <span class="has-text-success italic">Connecté</span>
+                    {:else}
+                      <span class="has-text-danger italic">Déconnecté</span>
+                    {/if}
+                  </div>
+                  <button
+                    class="button is-small is-danger"
+                    on:click={() => {
+                      removePlayer(player);
+                    }}>
+                    <span class="icon is-small">
+                      <i class="gg-trash" />
+                    </span>
+                  </button>
+                </div>
+              </div>
+            {/each}
+          </div>
+        {:else}
+          <p class="is-center italic">Aucun joueur n'est connecté</p>
+        {/if}
+      </div>
+    </div>
+
+    <!-- OPTIONS FORM -->
+    <div class="column is-6-desktop is-12-mobile is-inline-block is-center">
+      <h4 class="title is-4">Options</h4>
+
+      <div class="options-form">
+        <div class="control">
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              bind:checked={excludeAllPreviouslyPlayedCards}
+            />
+            Exclure toutes les cartes jouées lors de la partie précédente
+          </label>
+        </div>
+
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" bind:checked={onlyOneWithSameLetter} />
+            Un seul personnage de la même lettre par équipe
+          </label>
+        </div>
+
+        <div class="control">
+          <label class="radio bigger">
+            <input
+              type="radio"
+              name="answer"
+              bind:group={gameMode}
+              value={"single"}
+            />
+            Ne donner qu'une seule carte
+          </label>
+
+          <label class="checkbox sub-choice" disabled={gameMode !== "single"}>
+            <input
+              type="checkbox"
+              disabled={gameMode !== "single"}
+              bind:checked={preventSameSingle}
+            />
+            Empêcher les joueurs de tomber deux fois de suite sur la même carte
+          </label>
+
+          <label class="checkbox sub-choice" disabled={gameMode !== "single"}>
+            <input
+              type="checkbox"
+              disabled={gameMode !== "single"}
+              bind:checked={preventSameLetterSingle}
+            />
+            Empêcher les joueurs de tomber deux fois de suite sur une carte de la
+            même lettre
+          </label>
+        </div>
+
+        <div class="control">
+          <label class="radio bigger">
+            <input
+              type="radio"
+              name="answer"
+              bind:group={gameMode}
+              value={"double"}
+            />
+            Laisser le choix entre deux cartes
+          </label>
+
+          <label class="checkbox sub-choice" disabled={gameMode !== "double"}>
+            <input
+              type="checkbox"
+              disabled={gameMode !== "double"}
+              bind:checked={propositionsHaveSameLetterDouble}
+            />
+            Proposer deux cartes de la même lettre
+          </label>
+
+          <label class="checkbox sub-choice" disabled={gameMode !== "double"}>
+            <input
+              type="checkbox"
+              disabled={gameMode !== "double"}
+              bind:checked={preventSamePlayedDouble}
+            />
+            Empêcher la carte précédement jouée d'être reproposée au même joueur
+          </label>
+
+          <label class="checkbox sub-choice" disabled={gameMode !== "double"}>
+            <input
+              type="checkbox"
+              disabled={gameMode !== "double"}
+              bind:checked={preventSamePropositionsDouble}
+            />
+            Empêcher les deux cartes précédement proposées d'être reproposées au
+            même joueur
+          </label>
+        </div>
+
+        <div class="control">
+          <label class="radio bigger">
+            <input
+              type="radio"
+              name="answer"
+              bind:group={gameMode}
+              value={"letter"}
+            />
+            Laisser le choix entre toutes les cartes de la même lettre
+          </label>
+
+          <label class="checkbox sub-choice" disabled={gameMode !== "letter"}>
+            <input
+              type="checkbox"
+              disabled={gameMode !== "letter"}
+              bind:checked={preventSameLetter}
+            />
+            Empêcher les joueurs de tomber deux fois de suite sur la même lettre
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="is-center">
+    <div class="columns main-buttons">
+      <div class="column is-full is-inline-block">
+        <button
+          class="button is-fullwidth is-primary is-large"
+          on:click={startGame}
+          disabled={players.length === 0}> Lancer la partie </button>
+      </div>
+
+      <div class="column is-5 is-inline-block">
+        <button
+          class="button is-fullwidth is-primary"
+          on:click={() => statsFilePicker.click()}>
+          <span class="icon centered-button-icon">
+            <i class="gg-software-upload" />
+          </span>
+          Charger des statistiques
+        </button>
+        <input
+          type="file"
+          class="no-display"
+          bind:this={statsFilePicker}
+          on:change={loadStats}
+        />
+      </div>
+
+      <div class="column is-5 is-inline-block">
+        <button class="button is-fullwidth is-primary" on:click={saveStats}>
+          <span class="icon centered-button-icon">
+            <i class="gg-software-download" />
+          </span>
+          Sauvegarder les statistiques
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="is-center cards-list-title">
+    <h4 class="title is-4">Liste des cartes autorisées</h4>
+  </div>
+
+  <div class="cards">
+    <div class="columns">
+      {#each cards as card}
+        <div
+          class="column is-2-fullhd is-3-desktop is-4-tablet is-12-mobile is-inline-block"
+        >
+          <div
+            on:click={() => toggleCard(card)}
+            class:removed-card={allowedCards.findIndex(
+              (c) => c.name === card.name
+            ) === -1}
+          >
+            <Card {card} />
+          </div>
+        </div>
+      {/each}
+    </div>
+  </div>
+</div>
 
 <style>
   a {
@@ -291,252 +589,3 @@
     display: none;
   }
 </style>
-
-<div class="container is-fluid">
-  <div class="is-center">
-    <h3 class="title is-3">Partagez ce lien aux joueurs</h3>
-    <h6 class="subtitle is-6 vertical-center">
-      <a href={sharableLink} target="_blank">{sharableLink}</a>
-      <button class="button is-primary" on:click={copyLink}>
-        <span class="icon">
-          <i class="gg-clipboard" />
-        </span>
-        <span>Copier le lien</span>
-      </button>
-    </h6>
-  </div>
-
-  <div class="columns is-desktop form">
-
-    <!-- PLAYERS FORM -->
-    <div class="column is-6-desktop is-12-mobile is-inline-block is-center">
-      <h4 class="title is-4">Équipes</h4>
-      <div class="container is-fluid">
-        <div class="field team-select">
-          <div class="control">
-            <div class="select is-danger">
-              <select bind:value={shadowHuntersCount} on:change={shadowHuntersCountChanged}>
-                {#each shadowHuntersChoices as choice}
-                  <option value={choice}>
-                    {choice === 0 ? 'Aucun' : choice} shadow{choice > 1 ? 's' : ''}
-                  </option>
-                {/each}
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="field team-select">
-          <div class="control">
-            <div class="select is-info">
-              <select bind:value={shadowHuntersCount} on:change={shadowHuntersCountChanged}>
-                {#each shadowHuntersChoices as choice}
-                  <option value={choice}>
-                    {choice === 0 ? 'Aucun' : choice} hunter{choice > 1 ? 's' : ''}
-                  </option>
-                {/each}
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="field team-select">
-          <div class="control">
-            <div class="select is-warning">
-              <select bind:value={neutralCount} on:change={neutralCountChanged}>
-                {#each neutralChoices as choice}
-                  <option value={choice}>
-                    {choice === 0 ? 'Aucun' : choice} neutre{choice > 1 ? 's' : ''}
-                  </option>
-                {/each}
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <h4 class="title is-4 title-margin-top">Joueurs ({players.length})</h4>
-      <div class="container is-fluid">
-        {#if players.length}
-          <div class="list">
-            {#each players as player}
-              <div class="list-item">
-                <div class="flex">
-                  <div class="flex-1">
-                    {player.name}
-                    {#if player.peerId}
-                      <span class="has-text-success italic">Connecté</span>
-                    {:else}
-                      <span class="has-text-danger italic">Déconnecté</span>
-                    {/if}
-                  </div>
-                  <button
-                    class="button is-small is-danger"
-                    on:click={() => {
-                      removePlayer(player);
-                    }}
-                  >
-                    <span class="icon is-small">
-                      <i class="gg-trash" />
-                    </span>
-                  </button>
-                </div>
-              </div>
-            {/each}
-          </div>
-        {:else}
-          <p class="is-center italic">Aucun joueur n'est connecté</p>
-        {/if}
-      </div>
-    </div>
-
-    <!-- OPTIONS FORM -->
-    <div class="column is-6-desktop is-12-mobile is-inline-block is-center">
-      <h4 class="title is-4">Options</h4>
-
-      <div class="options-form">
-
-        <div class="control">
-
-          <label class="checkbox">
-            <input type="checkbox" bind:checked={excludeAllPreviouslyPlayedCards} />
-            Exclure toutes les cartes jouées lors de la partie précédente
-          </label>
-        </div>
-
-        <div class="control">
-          <label class="checkbox">
-            <input type="checkbox" bind:checked={onlyOneWithSameLetter} />
-            Un seul personnage de la même lettre par équipe
-          </label>
-        </div>
-
-        <div class="control">
-          <label class="radio bigger">
-            <input type="radio" name="answer" bind:group={gameMode} value={'single'} />
-            Ne donner qu'une seule carte
-          </label>
-
-          <label class="checkbox sub-choice" disabled={gameMode !== 'single'}>
-            <input
-              type="checkbox"
-              disabled={gameMode !== 'single'}
-              bind:checked={preventSameSingle}
-            />
-            Empêcher les joueurs de tomber deux fois de suite sur la même carte
-          </label>
-
-          <label class="checkbox sub-choice" disabled={gameMode !== 'single'}>
-            <input
-              type="checkbox"
-              disabled={gameMode !== 'single'}
-              bind:checked={preventSameLetterSingle}
-            />
-            Empêcher les joueurs de tomber deux fois de suite sur une carte de la même lettre
-          </label>
-        </div>
-
-        <div class="control">
-          <label class="radio bigger">
-            <input type="radio" name="answer" bind:group={gameMode} value={'double'} />
-            Laisser le choix entre deux cartes
-          </label>
-
-          <label class="checkbox sub-choice" disabled={gameMode !== 'double'}>
-            <input
-              type="checkbox"
-              disabled={gameMode !== 'double'}
-              bind:checked={propositionsHaveSameLetterDouble}
-            />
-            Proposer deux cartes de la même lettre
-          </label>
-
-          <label class="checkbox sub-choice" disabled={gameMode !== 'double'}>
-            <input
-              type="checkbox"
-              disabled={gameMode !== 'double'}
-              bind:checked={preventSamePlayedDouble}
-            />
-            Empêcher la carte précédement jouée d'être reproposée au même joueur
-          </label>
-
-          <label class="checkbox sub-choice" disabled={gameMode !== 'double'}>
-            <input
-              type="checkbox"
-              disabled={gameMode !== 'double'}
-              bind:checked={preventSamePropositionsDouble}
-            />
-            Empêcher les deux cartes précédement proposées d'être reproposées au même joueur
-          </label>
-        </div>
-
-        <div class="control">
-          <label class="radio bigger">
-            <input type="radio" name="answer" bind:group={gameMode} value={'letter'} />
-            Laisser le choix entre toutes les cartes de la même lettre
-          </label>
-
-          <label class="checkbox sub-choice" disabled={gameMode !== 'letter'}>
-            <input
-              type="checkbox"
-              disabled={gameMode !== 'letter'}
-              bind:checked={preventSameLetter}
-            />
-            Empêcher les joueurs de tomber deux fois de suite sur la même lettre
-          </label>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="is-center">
-    <div class="columns main-buttons">
-      <div class="column is-full is-inline-block">
-        <button
-          class="button is-fullwidth is-primary is-large"
-          on:click={startGame}
-          disabled={players.length === 0}
-        >
-          Lancer la partie
-        </button>
-      </div>
-
-      <div class="column is-5 is-inline-block">
-        <button class="button is-fullwidth is-primary" on:click={() => statsFilePicker.click()}>
-          <span class="icon centered-button-icon">
-            <i class="gg-software-upload" />
-          </span>
-          Charger des statistiques
-        </button>
-        <input type="file" class="no-display" bind:this={statsFilePicker} on:change={loadStats}/>
-      </div>
-
-      <div class="column is-5 is-inline-block">
-        <button class="button is-fullwidth is-primary" on:click={saveStats}>
-          <span class="icon centered-button-icon">
-            <i class="gg-software-download" />
-          </span>
-          Sauvegarder les statistiques
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="is-center cards-list-title">
-    <h4 class="title is-4">Liste des cartes autorisées</h4>
-  </div>
-
-  <div class="cards">
-    <div class="columns">
-      {#each cards as card}
-        <div class="column is-2-fullhd is-3-desktop is-4-tablet is-12-mobile is-inline-block">
-          <div
-            on:click={() => toggleCard(card)}
-            class:removed-card={allowedCards.findIndex(c => c.name === card.name) === -1}
-          >
-            <Card {card} />
-          </div>
-        </div>
-      {/each}
-    </div>
-  </div>
-</div>

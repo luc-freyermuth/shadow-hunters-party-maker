@@ -1,3 +1,12 @@
+<div class="header is-center">
+  <a href="/">
+    <img src="/images/logo.webp" alt="shadow hunters logo" />
+  </a>
+</div>
+<main>
+  <slot />
+</main>
+
 <style>
   main {
     flex: 1;
@@ -19,12 +28,3 @@
     }
   }
 </style>
-
-<div class="header is-center">
-  <a href="/">
-    <img src="images/logo.webp" alt="shadow hunters logo" />
-  </a>
-</div>
-<main>
-  <slot />
-</main>
