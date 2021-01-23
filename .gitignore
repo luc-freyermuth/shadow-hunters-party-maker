@@ -6,3 +6,4 @@
 static/theme.css
 static/cards/
 deploy.sh
+/.vscode
