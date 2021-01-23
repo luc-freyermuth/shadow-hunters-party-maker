@@ -1,4 +1,4 @@
-import type { Character } from "./character.types";
+import type { Character } from './character.types';
 
 export interface PeerConfig {
   host?: string;

@@ -16,4 +16,4 @@ export interface FeedbackStat {
 export interface Stats {
   picks: PickStat[];
   feedbacks: FeedbackStat[];
-} 
+}

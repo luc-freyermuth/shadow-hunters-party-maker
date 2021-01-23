@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Character } from "../types/character.types";
+  import type { Character } from '../types/character.types';
 
   export let card: Character = null;
   let hasError: boolean = false;
@@ -10,7 +10,7 @@
 
   let pictureUrl: string;
 
-  $: pictureUrl = "/cards/images/" + picture;
+  $: pictureUrl = '/cards/images/' + picture;
 
   $: {
     card;
@@ -24,7 +24,7 @@
   }
 
   function onError() {
-    console.log("error", card.name, fallbacks);
+    console.log('error', card.name, fallbacks);
     if (fallbacks.length === 0) {
       isLoading = false;
       hasError = true;
@@ -34,33 +34,6 @@
     }
   }
 </script>
-
-<div class="aspect-ratio-box">
-  <div class="aspect-ratio-box-inside">
-    {#if !hasError}
-      <img
-        src={pictureUrl}
-        alt={"card " + card.name}
-        on:error={onError}
-        on:load={afterLoad}
-      />
-      {#if isLoading}
-        <div class="loader-wrapper is-dimmed">
-          <div class="loader is-loading" />
-        </div>
-      {/if}
-    {:else}
-      <div
-        class="no-data"
-        class:shadow={card.team === "shadow"}
-        class:hunter={card.team === "hunter"}
-        class:neutral={card.team === "neutral"}
-      >
-        <span>{card.name}</span>
-      </div>
-    {/if}
-  </div>
-</div>
 
 <style>
   .aspect-ratio-box {
@@ -113,3 +86,25 @@
     color: transparent;
   }
 </style>
+
+<div class="aspect-ratio-box">
+  <div class="aspect-ratio-box-inside">
+    {#if !hasError}
+      <img src={pictureUrl} alt={'card ' + card.name} on:error={onError} on:load={afterLoad} />
+      {#if isLoading}
+        <div class="loader-wrapper is-dimmed">
+          <div class="loader is-loading" />
+        </div>
+      {/if}
+    {:else}
+      <div
+        class="no-data"
+        class:shadow={card.team === 'shadow'}
+        class:hunter={card.team === 'hunter'}
+        class:neutral={card.team === 'neutral'}
+      >
+        <span>{card.name}</span>
+      </div>
+    {/if}
+  </div>
+</div>

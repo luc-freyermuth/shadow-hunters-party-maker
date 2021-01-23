@@ -84,8 +84,7 @@ button.is-fullwidth {
 
 .list {
   background-color: transparent;
-  box-shadow: 0 2px 3px rgba(200, 200, 200, 0.1),
-    0 0 0 1px rgba(200, 200, 200, 0.1);
+  box-shadow: 0 2px 3px rgba(200, 200, 200, 0.1), 0 0 0 1px rgba(200, 200, 200, 0.1);
 }
 
 .list .list-item {
@@ -109,11 +108,11 @@ button.is-fullwidth {
 }
 
 @font-face {
-  font-family: "FontAwesome";
-  src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff")
-    format("woff");
-  src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2")
-    format("woff2");
+  font-family: 'FontAwesome';
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff')
+    format('woff');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2')
+    format('woff2');
 }
 
 .invisible {
