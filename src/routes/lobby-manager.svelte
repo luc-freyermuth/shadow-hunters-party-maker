@@ -2,6 +2,7 @@
   import Card from '../components/Card.svelte';
   import TeamsManager from '$components/TeamsManager.svelte';
   import StatsMenu from '$components/StatsMenu.svelte';
+  import PlayersList from '$components/PlayersList.svelte';
 
   import { getPeerHost, PeerHost } from '../peer2peer/peer-host';
   import { onMount } from 'svelte';
@@ -185,25 +186,8 @@
     margin-top: 1rem;
   }
 
-  .flex {
-    display: flex;
-  }
-
-  .flex-1 {
-    flex: 1;
-  }
-
-  .italic {
-    font-style: italic;
-  }
-
   .title-margin-top {
     margin-top: 24px;
-  }
-
-  .list {
-    max-width: 550px;
-    margin: auto;
   }
 
   .main-buttons {
@@ -249,38 +233,8 @@
       <h4 class="title is-4 title-margin-top">
         Joueurs ({players.length})
       </h4>
-      <div class="container is-fluid">
-        {#if players.length}
-          <div class="list">
-            {#each players as player}
-              <div class="list-item">
-                <div class="flex">
-                  <div class="flex-1">
-                    {player.name}
-                    {#if player.peerId}
-                      <span class="has-text-success italic">Connecté</span>
-                    {:else}
-                      <span class="has-text-danger italic">Déconnecté</span>
-                    {/if}
-                  </div>
-                  <button
-                    class="button is-small is-danger"
-                    on:click={() => {
-                      removePlayer(player);
-                    }}
-                  >
-                    <span class="icon is-small">
-                      <i class="gg-trash" />
-                    </span>
-                  </button>
-                </div>
-              </div>
-            {/each}
-          </div>
-        {:else}
-          <p class="is-center italic">Aucun joueur n'est connecté</p>
-        {/if}
-      </div>
+
+      <PlayersList {players} on:removePlayer={event => removePlayer(event.detail)} />
     </div>
 
     <!-- OPTIONS FORM -->
