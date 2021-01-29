@@ -1,10 +1,11 @@
 <script lang="typescript">
-  import { downloadJson, readJsonFromFile } from '../utils/json-files';
+  import Card from '../components/Card.svelte';
+  import TeamsManager from '$components/TeamsManager.svelte';
 
+  import { downloadJson, readJsonFromFile } from '../utils/json-files';
   import { getPeerHost, PeerHost } from '../peer2peer/peer-host';
   import { onMount } from 'svelte';
   import { cardsStore } from '../stores/cards-store';
-  import Card from '../components/Card.svelte';
   import copy from 'copy-to-clipboard';
   import type { GameConfig } from '../types/config.types';
   import type { Character } from '../types/character.types';
@@ -29,19 +30,9 @@
   let preventSamePropositionsDouble = false;
   let preventSameLetter = false;
 
-  // Teams //
-  let shadowHuntersCount = 0;
-  let neutralCount = 0;
-
-  let maxShadowHunters = 0;
-  $: maxShadowHunters = Math.floor(players.length / 2);
-
-  let shadowHuntersChoices = [0];
-  let neutralChoices = [0];
-  $: shadowHuntersChoices = [...Array(maxShadowHunters + 1).keys()];
-  $: neutralChoices = shadowHuntersChoices.map(shChoice => players.length - shChoice * 2).reverse();
-
   let linkToLobby: HTMLAnchorElement;
+
+  let shadowHuntersCount;
 
   onMount(() => {
     peerHost = getPeerHost();
@@ -52,7 +43,6 @@
     generateLinkFromPeer(peerHost.peer);
     peerHost.players$.subscribe(p => {
       players = p;
-      autoAssignTeams();
     });
     cardsStore.subscribe(storedCards => {
       cards = [...storedCards];
@@ -84,30 +74,6 @@
         generateUrlParam('path', peer.options.path),
         generateUrlParam('key', peer.options.key)
       ].join('&');
-  }
-
-  // prettier-ignore
-  function autoAssignTeams() {
-    switch(players.length) {
-      case 0: shadowHuntersCount = 0; neutralCount = 0; break;
-      case 1: shadowHuntersCount = 0; neutralCount = 1; break;
-      case 2: shadowHuntersCount = 1; neutralCount = 0; break;
-      case 3: shadowHuntersCount = 1; neutralCount = 1; break;
-      case 4: shadowHuntersCount = 2; neutralCount = 0; break;
-      case 5: shadowHuntersCount = 2; neutralCount = 1; break;
-      case 6: shadowHuntersCount = 2; neutralCount = 2; break;
-      case 7: shadowHuntersCount = 2; neutralCount = 3; break;
-      case 8: shadowHuntersCount = 3; neutralCount = 2; break;
-      case 9: shadowHuntersCount = 3; neutralCount = 3; break;
-    }
-  }
-
-  function shadowHuntersCountChanged() {
-    neutralCount = players.length - shadowHuntersCount * 2;
-  }
-
-  function neutralCountChanged() {
-    shadowHuntersCount = (players.length - neutralCount) / 2;
   }
 
   function toggleCard(card: Character) {
@@ -254,23 +220,6 @@
     margin: auto;
   }
 
-  .team-select {
-    max-width: 300px;
-    margin: auto;
-  }
-
-  .team-select:not(:first-child) {
-    margin-top: 1rem;
-  }
-
-  .team-select .control .select {
-    width: 100%;
-  }
-
-  .team-select .control .select select {
-    width: 100%;
-  }
-
   .main-buttons {
     max-width: 1000px;
     margin: auto;
@@ -309,54 +258,11 @@
 
   <div class="columns is-desktop form">
     <!-- PLAYERS FORM -->
+
     <div class="column is-6-desktop is-12-mobile is-inline-block is-center">
       <h4 class="title is-4">Équipes</h4>
-      <div class="container is-fluid">
-        <div class="field team-select">
-          <div class="control">
-            <div class="select is-danger">
-              <select bind:value={shadowHuntersCount} on:blur={shadowHuntersCountChanged}>
-                {#each shadowHuntersChoices as choice}
-                  <option value={choice}>
-                    {choice === 0 ? 'Aucun' : choice}
-                    shadow{choice > 1 ? 's' : ''}
-                  </option>
-                {/each}
-              </select>
-            </div>
-          </div>
-        </div>
 
-        <div class="field team-select">
-          <div class="control">
-            <div class="select is-info">
-              <select bind:value={shadowHuntersCount} on:blur={shadowHuntersCountChanged}>
-                {#each shadowHuntersChoices as choice}
-                  <option value={choice}>
-                    {choice === 0 ? 'Aucun' : choice}
-                    hunter{choice > 1 ? 's' : ''}
-                  </option>
-                {/each}
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="field team-select">
-          <div class="control">
-            <div class="select is-warning">
-              <select bind:value={neutralCount} on:blur={neutralCountChanged}>
-                {#each neutralChoices as choice}
-                  <option value={choice}>
-                    {choice === 0 ? 'Aucun' : choice}
-                    neutre{choice > 1 ? 's' : ''}
-                  </option>
-                {/each}
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
+      <TeamsManager playerCount={players.length} bind:shadowHuntersCount />
 
       <h4 class="title is-4 title-margin-top">
         Joueurs ({players.length})
@@ -379,7 +285,8 @@
                     class="button is-small is-danger"
                     on:click={() => {
                       removePlayer(player);
-                    }}>
+                    }}
+                  >
                     <span class="icon is-small">
                       <i class="gg-trash" />
                     </span>
@@ -496,7 +403,10 @@
         <button
           class="button is-fullwidth is-primary is-large"
           on:click={startGame}
-          disabled={players.length === 0}> Lancer la partie </button>
+          disabled={players.length === 0}
+        >
+          Lancer la partie
+        </button>
       </div>
 
       <div class="column is-5 is-inline-block">
