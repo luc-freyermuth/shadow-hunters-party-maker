@@ -12,7 +12,7 @@
   import type { Character } from '../types/character.types';
   import type { Player } from '../types/player.types';
 
-  let peerHost: PeerHost;
+  const peerHost: PeerHost = getPeerHost();
   let sharableLink: string;
   let players: Player[] = [];
   let cards: Character[] = [];
@@ -31,10 +31,10 @@
 
   let linkToLobby: HTMLAnchorElement;
 
-  let shadowHuntersCount: number;
+  let shadowCount;
+  let hunterCount;
 
   onMount(() => {
-    peerHost = getPeerHost();
     if (!peerHost.peer) {
       linkToLobby.click();
       return;
@@ -123,7 +123,10 @@
     const gameConfig: GameConfig = {
       options,
       cards: allowedCards,
-      shadowHuntersCount
+      teams: {
+        shadows: shadowCount,
+        hunters: hunterCount
+      }
     };
     peerHost.startGame(gameConfig);
   }
@@ -223,12 +226,10 @@
   </div>
 
   <div class="columns is-desktop form">
-    <!-- PLAYERS FORM -->
-
     <div class="column is-6-desktop is-12-mobile is-inline-block is-center">
       <h4 class="title is-4">Équipes</h4>
 
-      <TeamsManager playerCount={players.length} bind:shadowHuntersCount />
+      <TeamsManager playerCount={players.length} bind:shadowCount bind:hunterCount />
 
       <h4 class="title is-4 title-margin-top">
         Joueurs ({players.length})

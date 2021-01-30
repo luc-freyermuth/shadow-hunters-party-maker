@@ -8,7 +8,10 @@ export interface PeerConfig {
 }
 
 export interface GameConfig {
-  shadowHuntersCount: number;
+  teams: {
+    shadows: number;
+    hunters: number;
+  };
   cards: Character[];
   options: {
     excludeAllPreviouslyPlayedCards: boolean;

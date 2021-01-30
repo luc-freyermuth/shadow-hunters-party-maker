@@ -113,7 +113,7 @@ export class PeerHost {
   }
 
   startGame(gameConfig: GameConfig) {
-    const teams: Teams = this.createTeams(gameConfig.shadowHuntersCount);
+    const teams: Teams = this.createTeams(gameConfig.teams.hunters, gameConfig.teams.shadows);
 
     let cards = gameConfig.cards;
     if (gameConfig.options.excludeAllPreviouslyPlayedCards) {
@@ -149,12 +149,12 @@ export class PeerHost {
     // TODO : double and letter modes
   }
 
-  createTeams(shadowHuntersCount: number): Teams {
+  createTeams(hunters: number, shadows: number): Teams {
     const shuffledPlayers = this.shuffleArray(this.players);
     return {
-      hunter: shuffledPlayers.slice(0, shadowHuntersCount),
-      shadow: shuffledPlayers.slice(shadowHuntersCount, shadowHuntersCount * 2),
-      neutral: shuffledPlayers.slice(shadowHuntersCount * 2, shuffledPlayers.length)
+      hunter: shuffledPlayers.slice(0, hunters),
+      shadow: shuffledPlayers.slice(hunters, shadows + hunters),
+      neutral: shuffledPlayers.slice(shadows + hunters, shuffledPlayers.length)
     };
   }
 
