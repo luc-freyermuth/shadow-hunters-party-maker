@@ -3,4 +3,5 @@ export interface Character {
   team: string;
   image: string;
   imageFallbacks: string[];
+  theme: string;
 }

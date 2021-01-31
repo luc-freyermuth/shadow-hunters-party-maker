@@ -251,7 +251,7 @@
       <div class="is-vertical-center">
         <div class="card-container" in:fade out:fade>
           <Card card={currentCard} />
-          <ThemePlayer />
+          <ThemePlayer card={currentCard} />
           <button class="button is-primary is-fullwidth mt-4" on:click={requestFeedbackModal}
             >Terminer la partie</button
           >
