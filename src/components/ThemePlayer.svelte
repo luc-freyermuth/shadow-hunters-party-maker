@@ -2,10 +2,10 @@
   import type { Character } from 'src/types/character.types';
 
   export let card: Character;
-  // $: src = card?.theme;
-  $: src = '/cards/themes/' + card?.theme;
-
   let paused: boolean = true;
+
+  $: src = '/cards/themes/' + card?.theme;
+  $: disabled = !card?.theme;
 </script>
 
 <style>
@@ -18,7 +18,7 @@
   }
 </style>
 
-<button class="button is-primary is-fullwidth mt-4" on:click={() => (paused = !paused)}>
+<button class="button is-primary is-fullwidth mt-4" on:click={() => (paused = !paused)} {disabled}>
   Jouer le thème
   <i class:gg-play-button-o={paused} class:gg-play-pause-o={!paused} />
 </button>
