@@ -5,25 +5,28 @@
   }
 </script>
 
-<script>
+<script lang="ts">
   import Card from '../../components/Card.svelte';
   import FeedbackModal from '../../components/FeedbackModal.svelte';
+  import ThemePlayer from '$components/ThemePlayer.svelte';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
+  import type { PlayerInfo } from 'src/types/player.types';
+  import type { Character } from 'src/types/character.types';
 
-  export let hostId;
+  export let hostId: string;
 
   let peer;
-  let connectionToHost;
-  let connectionStatus;
-  let name;
-  let error;
+  let connectionToHost: any;
+  let connectionStatus: 'connectingToBroking' | 'connectingToHost' | 'ok' | 'error';
+  let name: string;
+  let error: string;
   let gameState = 'pickName';
-  let currentCard;
-  let choices = [];
-  let players = [];
+  let currentCard: Character;
+  let choices: Character[] = [];
+  let players: PlayerInfo[] = [];
 
-  let isSendingFeedback = false;
+  let isSendingFeedback: boolean = false;
 
   onMount(() => {
     createPeer();
@@ -248,6 +251,7 @@
       <div class="is-vertical-center">
         <div class="card-container" in:fade out:fade>
           <Card card={currentCard} />
+          <ThemePlayer />
           <button class="button is-primary is-fullwidth mt-4" on:click={requestFeedbackModal}
             >Terminer la partie</button
           >
