@@ -4,14 +4,36 @@
   export let card: Character;
   let paused: boolean = true;
   let currentTime: number = 0;
+  let audio;
 
   $: src = '/cards/themes/' + card?.theme;
   $: disabled = !card?.theme;
 
-  $: {
+  $: if (card) {
+    stopAudio();
+  }
+
+  function toggleAudio() {
     if (paused) {
-      console.log('reset time');
-      currentTime = 0;
+      playAudio();
+    } else {
+      stopAudio();
+    }
+  }
+
+  function playAudio() {
+    paused = false;
+    currentTime = 0;
+    if (audio) {
+      audio.play();
+    }
+  }
+
+  function stopAudio() {
+    paused = true;
+    currentTime = 0;
+    if (audio) {
+      audio.pause();
     }
   }
 </script>
@@ -26,9 +48,9 @@
   }
 </style>
 
-<button class="button is-primary is-fullwidth mt-4" on:click={() => (paused = !paused)} {disabled}>
+<button class="button is-primary is-fullwidth mt-4" on:click={toggleAudio} {disabled}>
   Jouer le thème
   <i class:gg-play-button-o={paused} class:gg-play-stop-o={!paused} />
 </button>
 
-<audio {src} controls bind:paused bind:currentTime><track kind="captions" /></audio>
+<audio {src} controls bind:currentTime bind:this={audio}><track kind="captions" /></audio>
