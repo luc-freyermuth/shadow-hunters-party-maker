@@ -86,6 +86,11 @@ export class PeerHost {
         break;
       case 'feedback':
         this.feedback(connection, data);
+        break;
+      case 'playTheme':
+        this.playTheme(connection);
+        break;
+
       default:
         console.error(`No action with type: ${type}`);
     }
@@ -356,6 +361,11 @@ export class PeerHost {
     this.sendPlayerToItsLocation(player);
   }
 
+  playTheme(connection: Peer.DataConnection) {
+    const player = this.getPlayerByConnection(connection);
+    this.broadcastPlayTheme(player.currentCard);
+  }
+
   // Requests //
 
   // Send //
@@ -392,6 +402,11 @@ export class PeerHost {
         };
       })
     );
+  }
+
+  broadcastPlayTheme(card: Character) {
+    console.log('broadcast !');
+    this.broadcast('playTheme', card);
   }
 
   shuffleArray<T>(array: T[]): T[] {
