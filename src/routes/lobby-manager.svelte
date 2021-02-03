@@ -34,6 +34,8 @@
   let shadowCount;
   let hunterCount;
 
+  $: broadcastTheme = peerHost?.broadcastTheme;
+
   onMount(() => {
     if (!peerHost.peer) {
       linkToLobby.click();
@@ -137,6 +139,10 @@
 
   function copyLink() {
     copy(sharableLink, { message: 'test' });
+  }
+
+  function changeBroadcast(event) {
+    peerHost?.broadcastTheme?.next(event.currentTarget.checked);
   }
 </script>
 
@@ -243,6 +249,13 @@
       <h4 class="title is-4">Options</h4>
 
       <div class="options-form">
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" checked={$broadcastTheme} on:change={changeBroadcast} />
+            Diffuser les thèmes des personnages à tous les joueurs
+          </label>
+        </div>
+
         <div class="control">
           <label class="checkbox">
             <input type="checkbox" bind:checked={excludeAllPreviouslyPlayedCards} />

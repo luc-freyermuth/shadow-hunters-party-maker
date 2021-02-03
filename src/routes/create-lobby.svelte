@@ -47,7 +47,7 @@
 
 <style>
   .limited-width {
-    max-width: 800px;
+    max-width: 800px !important;
   }
 </style>
 
@@ -107,7 +107,10 @@
     class="button is-primary is-fullwidth is-small-margin-bottom"
     on:click={createLobby}
     class:is-loading={isCreating}
-    disabled={isCreating}> Créer le salon </button>
+    disabled={isCreating}
+  >
+    Créer le salon
+  </button>
 
   {#if error}
     <div class="message is-danger">

@@ -2,7 +2,7 @@ import type { Teams, Player } from '../types/player.types';
 import type { GameConfig } from '../types/config.types';
 import type { Character } from '../types/character.types';
 import type { Stats } from '../types/stats.types';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export class PeerHost {
   peer: Peer;
@@ -10,6 +10,7 @@ export class PeerHost {
   players: Player[];
   players$: Subject<Player[]>;
   stats: Stats;
+  broadcastTheme: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor() {
     this.peer = null;
@@ -362,8 +363,10 @@ export class PeerHost {
   }
 
   playTheme(connection: Peer.DataConnection) {
-    const player = this.getPlayerByConnection(connection);
-    this.broadcastPlayTheme(player.currentCard);
+    if (this.broadcastTheme.getValue()) {
+      const player = this.getPlayerByConnection(connection);
+      this.broadcastPlayTheme(player.currentCard);
+    }
   }
 
   // Requests //
