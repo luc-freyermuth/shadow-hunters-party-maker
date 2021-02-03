@@ -10,7 +10,9 @@ export class PeerHost {
   players: Player[];
   players$: Subject<Player[]>;
   stats: Stats;
+
   broadcastTheme: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  lastBroadcastedTheme: { time: Date; card: Character };
 
   constructor() {
     this.peer = null;
@@ -325,6 +327,7 @@ export class PeerHost {
       const existingPlayer = this.getPlayerByName(name);
       existingPlayer.peerId = connection.peer;
       this.sendPlayerToItsLocation(existingPlayer);
+      this.sendThemeToReconnectedPlayer(existingPlayer);
     } else {
       const newPlayer = {
         name,
@@ -366,6 +369,10 @@ export class PeerHost {
     if (this.broadcastTheme.getValue()) {
       const player = this.getPlayerByConnection(connection);
       this.broadcastPlayTheme(player.currentCard);
+      this.lastBroadcastedTheme = {
+        time: new Date(),
+        card: player.currentCard
+      };
     }
   }
 
@@ -382,6 +389,22 @@ export class PeerHost {
 
   sendGoTo(connection: Peer.DataConnection, whereTo: string, roomData: any) {
     connection.send({ type: 'goTo', data: { room: whereTo, roomData } });
+  }
+
+  private sendThemeToReconnectedPlayer(player: Player) {
+    if (
+      this.broadcastTheme.getValue() &&
+      this.lastBroadcastedTheme &&
+      new Date().getTime() - this.lastBroadcastedTheme.time.getTime() < 30_000 // 30 s limit for resending
+    ) {
+      const connection = this.getConnectionByPlayer(player);
+      if (!connection) return;
+      this.sendTheme(connection, this.lastBroadcastedTheme.card);
+    }
+  }
+
+  private sendTheme(connection: Peer.DataConnection, card: Character) {
+    connection.send({ type: 'playTheme', data: card });
   }
 
   // Broadcast //
