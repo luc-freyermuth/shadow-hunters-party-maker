@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { Character } from 'src/types/character.types';
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onDestroy } from 'svelte';
 
   export let card: Character;
-  export let playThemeOf: Character;
+  export let autoPlay: boolean;
 
   let paused: boolean = true;
   let currentTime: number = 0;
@@ -16,13 +16,8 @@
 
   $: if (card) {
     stopAudio();
-  }
-
-  $: {
-    if (playThemeOf) {
-      src = '/cards/themes/' + playThemeOf.theme;
+    if (autoPlay) {
       playAudio();
-      console.log(audio.readyState);
     }
   }
 
@@ -56,11 +51,19 @@
     }
   }
 
-  function dispatchPlay() {
+  function dispatchStatus() {
     if (!paused) {
       dispatch('play');
+    } else {
+      dispatch('pause');
     }
   }
+
+  onDestroy(() => {
+    if (audio) {
+      audio.pause();
+    }
+  });
 </script>
 
 <style>
@@ -77,7 +80,7 @@
   class="button is-primary is-fullwidth mt-4"
   on:click={() => {
     toggleAudio();
-    dispatchPlay();
+    dispatchStatus();
   }}
   disabled={disabled && paused}
 >

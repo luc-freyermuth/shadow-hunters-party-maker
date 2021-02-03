@@ -29,6 +29,7 @@
   let isSendingFeedback: boolean = false;
 
   let cardToPlayThemeFrom: Character;
+  let autoPlay = false;
 
   onMount(() => {
     createPeer();
@@ -95,7 +96,10 @@
         players = data;
         break;
       case 'playTheme':
-        cardToPlayThemeFrom = data;
+        if (data.name !== currentCard.name) {
+          cardToPlayThemeFrom = data;
+          autoPlay = true;
+        }
         break;
       default:
         console.error('Unable to handle message of type: ' + type);
@@ -133,6 +137,11 @@
     connectionToHost.send({
       action: 'playTheme'
     });
+  }
+
+  function resetCardToPlayThemeFrom() {
+    cardToPlayThemeFrom = null;
+    autoPlay = false;
   }
 </script>
 
@@ -262,7 +271,12 @@
       <div class="is-vertical-center">
         <div class="card-container" in:fade out:fade>
           <Card card={currentCard} />
-          <ThemePlayer card={currentCard} playThemeOf={cardToPlayThemeFrom} on:play={sendPlayMusic} />
+          <ThemePlayer
+            card={cardToPlayThemeFrom ? cardToPlayThemeFrom : currentCard}
+            on:play={sendPlayMusic}
+            on:pause={resetCardToPlayThemeFrom}
+            {autoPlay}
+          />
           <button class="button is-primary is-fullwidth mt-4" on:click={requestFeedbackModal}
             >Terminer la partie</button
           >
