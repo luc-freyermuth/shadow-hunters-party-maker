@@ -7,7 +7,7 @@
 
   let paused: boolean = true;
   let currentTime: number = 0;
-  let audio;
+  let audio: HTMLAudioElement;
 
   const dispatch = createEventDispatcher();
 
@@ -77,14 +77,20 @@
 </style>
 
 <button
-  class="button is-primary is-fullwidth mt-4"
+  class="button is-fullwidth mt-4"
   on:click={() => {
     toggleAudio();
     dispatchStatus();
   }}
   disabled={disabled && paused}
+  class:is-primary={paused}
+  class:is-warning={!paused}
 >
-  Jouer le thème
+  {#if paused}
+    Jouer le thème
+  {:else}
+    Thème en cours : { card.name }
+  {/if}
   <i class:gg-play-button-o={paused} class:gg-play-stop-o={!paused} />
 </button>
 

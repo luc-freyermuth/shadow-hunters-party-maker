@@ -8,7 +8,7 @@
 <script lang="ts">
   import Card from '../../components/Card.svelte';
   import FeedbackModal from '../../components/FeedbackModal.svelte';
-  import ThemePlayer from '$components/ThemePlayer.svelte';
+  import ThemePlayer from '../../components/ThemePlayer.svelte';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import type { PlayerInfo } from 'src/types/player.types';
