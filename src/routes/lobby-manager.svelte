@@ -11,6 +11,7 @@
   import type { GameConfig } from '../types/config.types';
   import type { Character } from '../types/character.types';
   import type { Player } from '../types/player.types';
+  import { goto } from '$app/navigation';
 
   const peerHost: PeerHost = getPeerHost();
   let sharableLink: string;
@@ -29,8 +30,6 @@
   let preventSamePropositionsDouble = false;
   let preventSameLetter = false;
 
-  let linkToLobby: HTMLAnchorElement;
-
   let shadowCount;
   let hunterCount;
 
@@ -38,7 +37,7 @@
 
   onMount(() => {
     if (!peerHost.peer) {
-      linkToLobby.click();
+      goto('/create-lobby');
       return;
     }
     generateLinkFromPeer(peerHost.peer);
@@ -216,8 +215,6 @@
     opacity: 0.6;
   }
 </style>
-
-<a href="/create-lobby" bind:this={linkToLobby} class="invisible"> TODO: Remove this </a>
 
 <div class="container is-fluid">
   <div class="is-center">

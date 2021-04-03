@@ -2,6 +2,7 @@
   import { getPeerHost } from '../peer2peer/peer-host';
   import { onMount } from 'svelte';
   import type { PeerConfig } from '../types/config.types';
+  import { goto } from '$app/navigation';
 
   const peerHost = getPeerHost();
 
@@ -11,9 +12,6 @@
   let key: string;
   let isCreating: boolean;
   let error: boolean;
-
-  // TODO Change this when svelte kit allows to use routing :)
-  let linkToManager: HTMLAnchorElement;
 
   onMount(() => {
     const localStoredPeerConfig = localStorage.getItem('PEER_CONFIG')
@@ -35,7 +33,7 @@
       .start(peerConfig)
       .then(() => {
         localStorage.setItem('PEER_CONFIG', JSON.stringify(peerConfig));
-        linkToManager.click();
+        goto('/lobby-manager');
       })
       .catch(err => {
         isCreating = false;
@@ -51,7 +49,6 @@
   }
 </style>
 
-<a href="/lobby-manager" bind:this={linkToManager} class="invisible"> TODO: Remove this </a>
 <div class="container is-fluid is-vertical-center limited-width">
   <h2 class="title is-2 is-center">Configuration du salon</h2>
 
