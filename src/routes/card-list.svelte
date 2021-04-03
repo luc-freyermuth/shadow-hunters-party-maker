@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { cardsStore } from '$stores/cards-store';
-  import Card from '$components/Card.svelte';
+  import { cardsStore } from '../stores/cards-store';
+  import Card from '../components/Card.svelte';
   import { onMount } from 'svelte';
   import type { Character } from '../types/character.types';
 

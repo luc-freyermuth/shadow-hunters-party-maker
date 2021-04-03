@@ -1,4 +1,5 @@
-import { readable, Readable } from 'svelte/store';
+import { readable } from 'svelte/store';
+import type { Readable } from 'svelte/store';
 import type { Character } from '../types/character.types';
 
 export const cardsStore: Readable<Character[]> = readable([], set => {
