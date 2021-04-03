@@ -10,7 +10,7 @@
 
   let pictureUrl: string;
 
-  $: pictureUrl = '/cards/images/' + picture; 
+  $: pictureUrl = '/cards/images/' + picture;
 
   $: {
     card;

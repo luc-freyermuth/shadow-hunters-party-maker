@@ -89,7 +89,7 @@
   {#if paused}
     Jouer le thème
   {:else}
-    Thème en cours : { card.name }
+    Thème en cours : {card.name}
   {/if}
   <i class:gg-play-button-o={paused} class:gg-play-stop-o={!paused} />
 </button>

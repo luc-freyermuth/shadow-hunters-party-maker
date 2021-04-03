@@ -108,7 +108,10 @@
         <button
           class="button flex-1"
           class:is-danger={win === false}
-          on:click={() => (win = false)}> Défaite </button>
+          on:click={() => (win = false)}
+        >
+          Défaite
+        </button>
       </div>
       <!-- 
       <h2 class="title is-2">La partie t'a plu ?</h2> -->
@@ -133,7 +136,10 @@
       <button
         class="button is-primary is-fullwidth"
         disabled={!formIsValid}
-        on:click={pickedFeedback}> Valider </button>
+        on:click={pickedFeedback}
+      >
+        Valider
+      </button>
     </footer>
   </div>
 </div>

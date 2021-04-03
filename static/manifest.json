@@ -1,15 +1,15 @@
 {
-	"background_color": "#4c4d7f",
-	"theme_color": "#333333",
-	"name": "Shadow hunters",
-	"short_name": "Shadow hunters",
-	"display": "fullscreen",
-	"start_url": "/",
-	"icons": [
-		{
-			"src": "logo-192.png",
-			"sizes": "192x192",
-			"type": "image/png"
-		}
-	]
+  "background_color": "#4c4d7f",
+  "theme_color": "#333333",
+  "name": "Shadow hunters",
+  "short_name": "Shadow hunters",
+  "display": "fullscreen",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
 }
