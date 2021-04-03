@@ -1,13 +1,13 @@
 <script lang="typescript">
   import Card from '../components/Card.svelte';
-  import TeamsManager from '$components/TeamsManager.svelte';
-  import StatsMenu from '$components/StatsMenu.svelte';
-  import PlayersList from '$components/PlayersList.svelte';
+  import TeamsManager from '../components/TeamsManager.svelte';
+  import StatsMenu from '../components/StatsMenu.svelte';
+  import PlayersList from '../components/PlayersList.svelte';
 
   import { getPeerHost, PeerHost } from '../peer2peer/peer-host';
   import { onMount } from 'svelte';
   import { cardsStore } from '../stores/cards-store';
-  import copy from 'copy-to-clipboard';
+  import { default as copy } from 'copy-to-clipboard';
   import type { GameConfig } from '../types/config.types';
   import type { Character } from '../types/character.types';
   import type { Player } from '../types/player.types';
