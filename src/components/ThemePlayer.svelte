@@ -87,7 +87,7 @@
   class:is-warning={!paused}
 >
   {#if paused}
-    Jouer le thème
+    Jouer mon thème
   {:else}
     Thème en cours : {card.name}
   {/if}

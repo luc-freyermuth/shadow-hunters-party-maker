@@ -65,14 +65,14 @@
   function generateLinkFromPeer(peer) {
     sharableLink =
       window.location.origin +
-      '/play/' +
-      peer.id +
+      '/play' +
       '?' +
       [
         generateUrlParam('host', peer.options.host),
         generateUrlParam('port', peer.options.port),
         generateUrlParam('path', peer.options.path),
-        generateUrlParam('key', peer.options.key)
+        generateUrlParam('key', peer.options.key),
+        generateUrlParam('room', peer.id)
       ].join('&');
   }
 
