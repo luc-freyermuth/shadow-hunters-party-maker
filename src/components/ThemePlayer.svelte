@@ -100,5 +100,8 @@
   bind:currentTime
   bind:this={audio}
   crossOrigin="anonymous"
-  on:canplay={onCanPlay}><track kind="captions" /></audio
+  on:canplay={onCanPlay}
+  on:ended={stopAudio}
 >
+  <track kind="captions" />
+</audio>
