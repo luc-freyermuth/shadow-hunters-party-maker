@@ -65,7 +65,7 @@
   function generateLinkFromPeer(peer) {
     sharableLink =
       window.location.origin +
-      '/play' +
+      '/play/' +
       '?' +
       [
         generateUrlParam('host', peer.options.host),
