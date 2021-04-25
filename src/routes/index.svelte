@@ -1,3 +1,7 @@
+<script context="module">
+  export const prerender = true;
+</script>
+
 <style>
   a:not(:last-child) {
     margin-bottom: 1em;

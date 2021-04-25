@@ -1,3 +1,7 @@
+<script context="module">
+  export const prerender = true;
+</script>
+
 <script lang="ts">
   import { getPeerHost } from '../peer2peer/peer-host';
   import { onMount } from 'svelte';

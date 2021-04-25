@@ -1,3 +1,7 @@
+<script context="module">
+  export const prerender = true;
+</script>
+
 <script lang="typescript">
   import Card from '../components/Card.svelte';
   import TeamsManager from '../components/TeamsManager.svelte';
@@ -66,13 +70,14 @@
     sharableLink =
       window.location.origin +
       '/play/' +
+      peer.id +
+      '/' +
       '?' +
       [
         generateUrlParam('host', peer.options.host),
         generateUrlParam('port', peer.options.port),
         generateUrlParam('path', peer.options.path),
-        generateUrlParam('key', peer.options.key),
-        generateUrlParam('room', peer.id)
+        generateUrlParam('key', peer.options.key)
       ].join('&');
   }
 
