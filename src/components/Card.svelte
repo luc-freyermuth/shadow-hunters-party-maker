@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { Character } from '../types/character.types';
+  import { onMount } from 'svelte';
 
   export let card: Character = null;
+
+  let imageElement: HTMLImageElement;
+
   let hasError: boolean = false;
   let isLoading: boolean = true;
 
@@ -18,6 +22,10 @@
     fallbacks = card.imageFallbacks ? [...card.imageFallbacks] : [];
     hasError = false;
   }
+
+  onMount(() => {
+    isLoading = !imageElement.complete;
+  });
 
   function afterLoad() {
     isLoading = false;
@@ -90,7 +98,13 @@
 <div class="aspect-ratio-box">
   <div class="aspect-ratio-box-inside">
     {#if !hasError}
-      <img src={pictureUrl} alt={'card ' + card.name} on:error={onError} on:load={afterLoad} />
+      <img
+        on:load={afterLoad}
+        src={pictureUrl}
+        alt={'card ' + card.name}
+        on:error={onError}
+        bind:this={imageElement}
+      />
       {#if isLoading}
         <div class="loader-wrapper is-dimmed">
           <div class="loader is-loading" />

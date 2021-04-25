@@ -1,22 +1,32 @@
 <script context="module">
   export const prerender = true;
+
+  export async function load({ page, fetch, session, context }) {
+    const url = `/cards/cards.json`;
+    const res = await fetch(url);
+
+    if (res.ok) {
+      return {
+        props: {
+          cards: await res.json()
+        }
+      };
+    }
+
+    return {
+      status: res.status,
+      error: new Error(`Could not load ${url}`)
+    };
+  }
 </script>
 
 <script lang="ts">
-  import { cardsStore } from '../stores/cards-store';
   import Card from '../components/Card.svelte';
-  import { onMount } from 'svelte';
   import type { Character } from '../types/character.types';
 
-  let cards: Character[] = [];
+  export let cards: Character[] = [];
   let filteredCards: Character[];
   let search: string = '';
-
-  onMount(() => {
-    cardsStore.subscribe((newCards: Character[]) => {
-      cards = [...newCards];
-    });
-  });
 
   $: filteredCards = cards.filter(c =>
     c.name.toLowerCase().trim().includes(search.toLowerCase().trim())
