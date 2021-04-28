@@ -15,9 +15,10 @@ const mapToObject = mapInstance => {
   return obj;
 };
 
-function orderObject(o, getKey, sort) {
+function orderObject(o, getKey, sort, filter) {
   return Object.entries(o)
     .sort(([key1, value1], [key2, value2]) => sort(getKey(value1), getKey(value2)))
+    .filter(([key, item]) => (filter ? filter(item) : true))
     .reduce((obj, [key, value]) => {
       obj[key] = o[key];
       return obj;
@@ -105,6 +106,35 @@ mapFeedbacks.forEach((item, key) => {
 
 console.log(mapToObject(mapFeedbacks));
 
+const mapPlayerWins = new Map();
+
+for (const feedback of feedbacks) {
+  let mapItem;
+  if (mapPlayerWins.has(feedback.name)) {
+    mapItem = mapPlayerWins.get(feedback.name);
+  } else {
+    mapItem = {
+      played: 0,
+      wins: 0,
+      funLevels: []
+    };
+    mapPlayerWins.set(feedback.name, mapItem);
+  }
+  mapItem.played++;
+  mapItem.wins += feedback.win ? 1 : 0;
+  mapItem.funLevels.push(feedback.funLevel);
+}
+
+mapPlayerWins.forEach((item, key) => {
+  mapPlayerWins.set(key, {
+    ...item,
+    winRate: Math.round((item.wins / item.played) * 100) / 100,
+    averageFun:
+      Math.round((item.funLevels.reduce((a, b) => a + b, 0) / item.funLevels.length) * 100) / 100,
+    funLevels: undefined
+  });
+});
+
 fs.writeFileSync(
   path.join(fileFolder, 'compiled.json'),
   JSON.stringify(
@@ -123,6 +153,18 @@ fs.writeFileSync(
         mapToObject(mapFeedbacks),
         item => item.averageFun,
         (a, b) => b - a
+      ),
+      playerWinRate: orderObject(
+        mapToObject(mapPlayerWins),
+        item => item.winRate,
+        (a, b) => b - a,
+        item => item.played > 5
+      ),
+      playerFunLevel: orderObject(
+        mapToObject(mapPlayerWins),
+        item => item.averageFun,
+        (a, b) => b - a,
+        item => item.played > 5
       )
     },
     null,
