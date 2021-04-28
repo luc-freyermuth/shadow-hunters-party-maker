@@ -173,3 +173,92 @@ fs.writeFileSync(
 );
 
 console.log(feedbacks.length);
+
+const games = feedbacks.reduce((games, feedback) => {
+  const game = games.find(g => {
+    return Math.abs(new Date(g.date) - new Date(feedback.date)) < 1000 * 60 * 10;
+  });
+
+  if (!game) {
+    return [...games, { date: feedback.date, feedbacks: [feedback] }];
+  }
+
+  game.feedbacks.push(feedback);
+  return games;
+}, []);
+
+console.log(games);
+console.log(games.length);
+
+function getTeam(character) {
+  const firstLetter = character.charAt(0);
+
+  switch (firstLetter) {
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+      return 'neutral';
+    case 'G':
+    case 'F':
+    case 'E':
+      return 'hunter';
+    case 'M':
+    case 'L':
+    case 'V':
+      return 'shadow';
+  }
+}
+
+function getPlayerStatsTogether(player1, player2) {
+  const gamesTogether = games.filter(game => {
+    const p1 = game.feedbacks.find(fb => fb.name === player1);
+    const p2 = game.feedbacks.find(fb => fb.name === player2);
+
+    if (!p1 || !p2) return false;
+
+    return (
+      getTeam(p1.pick) === getTeam(p2.pick) && getTeam(p1.pick) !== 'neutral' && p1.win === p2.win
+    );
+  });
+
+  //   console.log(gamesTogether.filter(game => game.feedbacks.find(fb => fb.name === player1).win));
+  //   console.log('together', gamesTogether);
+
+  const played = gamesTogether.length;
+  const wins = gamesTogether
+    .map(game => game.feedbacks.find(fb => fb.name === player1))
+    .filter(fb => fb.win).length;
+
+  return { played, wins, ratio: wins / played };
+}
+
+const players = Object.keys(
+  orderObject(
+    mapToObject(mapPlayerWins),
+    item => item.winRate,
+    (a, b) => b - a,
+    item => item.played > 4
+  )
+);
+
+console.log(players);
+
+const allStatsTogether = [
+  [, ...players],
+  ...players.map(player1 => [
+    player1,
+    ...players.map(player2 => {
+      const result = getPlayerStatsTogether(player1, player2);
+      if (player1 === player2) return '';
+      if ((!result.ratio && result.ratio !== 0) || result.played === 0) return '';
+      return Math.floor(result.ratio * 100) + '%';
+      //   return result.played;
+    })
+  ])
+];
+
+delete console.table;
+require('console.table');
+
+console.table(allStatsTogether);
