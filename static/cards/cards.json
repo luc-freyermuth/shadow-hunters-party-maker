@@ -1,0 +1,655 @@
+[
+    {
+        "name": "Agnes",
+        "team": "neutral",
+        "image": "agnes.webp",
+        "imageFallbacks": [
+            "agnes.jpg"
+        ]
+    },
+    {
+        "name": "Aiba",
+        "team": "neutral",
+        "image": "aiba.webp",
+        "imageFallbacks": [
+            "aiba.jpg"
+        ],
+        "theme": "aiba.mp3"
+    },
+    {
+        "name": "Airy",
+        "team": "neutral",
+        "image": "airy.webp",
+        "imageFallbacks": [
+            "airy.jpg"
+        ],
+        "theme": "airy.mp3"
+    },
+    {
+        "name": "Akemi Homura",
+        "team": "neutral",
+        "image": "akemi-homura.webp",
+        "imageFallbacks": [
+            "akemi-homura.jpg"
+        ],
+        "theme": "akemi-homura.mp3"
+    },
+    {
+        "name": "Alipheese",
+        "team": "neutral",
+        "image": "alipheese.webp",
+        "imageFallbacks": [
+            "alipheese.jpg"
+        ],
+        "theme": "alipheese.mp3"
+    },
+    {
+        "name": "Allie",
+        "team": "neutral",
+        "image": "allie.webp",
+        "imageFallbacks": [
+            "allie.jpg"
+        ]
+    },
+    {
+        "name": "Aqua",
+        "team": "neutral",
+        "image": "aqua.webp",
+        "imageFallbacks": [
+            "aqua.jpg"
+        ],
+        "theme": "aqua.mp3"
+    },
+    {
+        "name": "Arash",
+        "team": "neutral",
+        "image": "arash.webp",
+        "imageFallbacks": [
+            "arash.jpg"
+        ],
+        "theme": "arash.mp3"
+    },
+    {
+        "name": "Asuka",
+        "team": "neutral",
+        "image": "asuka.webp",
+        "imageFallbacks": [
+            "asuka.jpg"
+        ],
+        "theme": "asuka.mp3"
+    },
+    {
+        "name": "Batou",
+        "team": "neutral",
+        "image": "batou.webp",
+        "imageFallbacks": [
+            "batou.jpg"
+        ],
+        "theme": "batou.mp3"
+    },
+    {
+        "name": "Battler",
+        "team": "neutral",
+        "image": "battler.webp",
+        "imageFallbacks": [
+            "battler.jpg"
+        ],
+        "theme": "battler.mp3"
+    },
+    {
+        "name": "Bb",
+        "team": "neutral",
+        "image": "bb.webp",
+        "imageFallbacks": [
+            "bb.jpg"
+        ],
+        "theme": "bb.mp3"
+    },
+    {
+        "name": "Beatrice",
+        "team": "neutral",
+        "image": "beatrice.webp",
+        "imageFallbacks": [
+            "beatrice.jpg"
+        ],
+        "theme": "beatrice.mp3"
+    },
+    {
+        "name": "Bob",
+        "team": "neutral",
+        "image": "bob.webp",
+        "imageFallbacks": [
+            "bob.jpg"
+        ]
+    },
+    {
+        "name": "Bryan",
+        "team": "neutral",
+        "image": "bryan.webp",
+        "imageFallbacks": [
+            "bryan.jpg"
+        ]
+    },
+    {
+        "name": "Bucciarati",
+        "team": "neutral",
+        "image": "bucciarati.webp",
+        "imageFallbacks": [
+            "bucciarati.jpg"
+        ],
+        "theme": "bucciarati.mp3"
+    },
+    {
+        "name": "Catherine",
+        "team": "neutral",
+        "image": "catherine.webp",
+        "imageFallbacks": [
+            "catherine.jpg"
+        ]
+    },
+    {
+        "name": "Cc",
+        "team": "neutral",
+        "image": "cc.webp",
+        "imageFallbacks": [
+            "cc.jpg"
+        ],
+        "theme": "cc.mp3"
+    },
+    {
+        "name": "Celeste",
+        "team": "neutral",
+        "image": "celeste.webp",
+        "imageFallbacks": [
+            "celeste.jpg"
+        ],
+        "theme": "celeste.mp3"
+    },
+    {
+        "name": "Charles",
+        "team": "neutral",
+        "image": "charles.webp",
+        "imageFallbacks": [
+            "charles.jpg"
+        ]
+    },
+    {
+        "name": "Chika",
+        "team": "neutral",
+        "image": "chika.webp",
+        "imageFallbacks": [
+            "chika.jpg"
+        ],
+        "theme": "chika.mp3"
+    },
+    {
+        "name": "Ciri",
+        "team": "neutral",
+        "image": "ciri.webp",
+        "imageFallbacks": [
+            "ciri.jpg"
+        ],
+        "theme": "ciri.mp3"
+    },
+    {
+        "name": "Claude",
+        "team": "neutral",
+        "image": "claude.webp",
+        "imageFallbacks": [
+            "claude.jpg"
+        ],
+        "theme": "claude.mp3"
+    },
+    {
+        "name": "Daniel",
+        "team": "neutral",
+        "image": "daniel.webp",
+        "imageFallbacks": [
+            "daniel.jpg"
+        ]
+    },
+    {
+        "name": "Darkness",
+        "team": "neutral",
+        "image": "darkness.webp",
+        "imageFallbacks": [
+            "darkness.jpg"
+        ],
+        "theme": "darkness.mp3"
+    },
+    {
+        "name": "David",
+        "team": "neutral",
+        "image": "david.webp",
+        "imageFallbacks": [
+            "david.jpg"
+        ]
+    },
+    {
+        "name": "Decim",
+        "team": "neutral",
+        "image": "decim.webp",
+        "imageFallbacks": [
+            "decim.jpg"
+        ],
+        "theme": "decim.mp3"
+    },
+    {
+        "name": "Diana",
+        "team": "neutral",
+        "image": "diana.webp",
+        "imageFallbacks": [
+            "diana.jpg"
+        ],
+        "theme": "diana.mp3"
+    },
+    {
+        "name": "Dio",
+        "team": "neutral",
+        "image": "dio.webp",
+        "imageFallbacks": [
+            "dio.jpg"
+        ],
+        "theme": "dio.mp3"
+    },
+    {
+        "name": "Dlanor",
+        "team": "neutral",
+        "image": "dlanor.webp",
+        "imageFallbacks": [
+            "dlanor.jpg"
+        ],
+        "theme": "dlanor.mp3"
+    },
+    {
+        "name": "Doppio",
+        "team": "neutral",
+        "image": "doppio.webp",
+        "imageFallbacks": [
+            "doppio.jpg"
+        ],
+        "theme": "doppio.mp3"
+    },
+    {
+        "name": "Edgeworth",
+        "team": "hunter",
+        "image": "edgeworth.webp",
+        "imageFallbacks": [
+            "edgeworth.jpg"
+        ],
+        "theme": "edgeworth.mp3"
+    },
+    {
+        "name": "Elincia",
+        "team": "hunter",
+        "image": "elincia.webp",
+        "imageFallbacks": [
+            "elincia.jpg"
+        ],
+        "theme": "elincia.mp3"
+    },
+    {
+        "name": "Ellen",
+        "team": "hunter",
+        "image": "ellen.webp",
+        "imageFallbacks": [
+            "ellen.jpg"
+        ]
+    },
+    {
+        "name": "Emi",
+        "team": "hunter",
+        "image": "emi.webp",
+        "imageFallbacks": [
+            "emi.jpg"
+        ]
+    },
+    {
+        "name": "Emma",
+        "team": "hunter",
+        "image": "emma.webp",
+        "imageFallbacks": [
+            "emma.jpg"
+        ],
+        "theme": "emma.mp3"
+    },
+    {
+        "name": "Erika",
+        "team": "hunter",
+        "image": "erika.webp",
+        "imageFallbacks": [
+            "erika.jpg"
+        ],
+        "theme": "erika.mp3"
+    },
+    {
+        "name": "Eva",
+        "team": "hunter",
+        "image": "eva.webp",
+        "imageFallbacks": [
+            "eva.jpg"
+        ],
+        "theme": "eva.mp3"
+    },
+    {
+        "name": "Fai",
+        "team": "hunter",
+        "image": "fai.webp",
+        "imageFallbacks": [
+            "fai.jpg"
+        ],
+        "theme": "fai.mp3"
+    },
+    {
+        "name": "Faust",
+        "team": "hunter",
+        "image": "faust.webp",
+        "imageFallbacks": [
+            "faust.jpg"
+        ],
+        "theme": "faust.mp3"
+    },
+    {
+        "name": "Faye",
+        "team": "hunter",
+        "image": "faye.webp",
+        "imageFallbacks": [
+            "faye.jpg"
+        ],
+        "theme": "faye.mp3"
+    },
+    {
+        "name": "Fiora",
+        "team": "hunter",
+        "image": "fiora.webp",
+        "imageFallbacks": [
+            "fiora.jpg"
+        ],
+        "theme": "fiora.mp3"
+    },
+    {
+        "name": "Fosphophillite",
+        "team": "hunter",
+        "image": "fosphophillite.webp",
+        "imageFallbacks": [
+            "fosphophillite.jpg"
+        ],
+        "theme": "fosphophillite.mp3"
+    },
+    {
+        "name": "Franklin",
+        "team": "hunter",
+        "image": "franklin.webp",
+        "imageFallbacks": [
+            "franklin.jpg"
+        ]
+    },
+    {
+        "name": "Fu Ka",
+        "team": "hunter",
+        "image": "fu-ka.webp",
+        "imageFallbacks": [
+            "fu-ka.jpg"
+        ]
+    },
+    {
+        "name": "Georges",
+        "team": "hunter",
+        "image": "georges.webp",
+        "imageFallbacks": [
+            "georges.jpg"
+        ]
+    },
+    {
+        "name": "Geralt",
+        "team": "hunter",
+        "image": "geralt.webp",
+        "imageFallbacks": [
+            "geralt.jpg"
+        ],
+        "theme": "geralt.mp3"
+    },
+    {
+        "name": "Ginoza",
+        "team": "hunter",
+        "image": "ginoza.webp",
+        "imageFallbacks": [
+            "ginoza.jpg"
+        ],
+        "theme": "ginoza.mp3"
+    },
+    {
+        "name": "Gintoki",
+        "team": "hunter",
+        "image": "gintoki.webp",
+        "imageFallbacks": [
+            "gintoki.jpg"
+        ],
+        "theme": "gintoki.mp3"
+    },
+    {
+        "name": "Giorno",
+        "team": "hunter",
+        "image": "giorno.webp",
+        "imageFallbacks": [
+            "giorno.jpg"
+        ],
+        "theme": "giorno.mp3"
+    },
+    {
+        "name": "Gregor",
+        "team": "hunter",
+        "image": "gregor.webp",
+        "imageFallbacks": [
+            "gregor.jpg"
+        ]
+    },
+    {
+        "name": "Guts",
+        "team": "hunter",
+        "image": "guts.webp",
+        "imageFallbacks": [
+            "guts.jpg"
+        ],
+        "theme": "guts.mp3"
+    },
+    {
+        "name": "Lain",
+        "team": "shadow",
+        "image": "lain.webp",
+        "imageFallbacks": [
+            "lain.jpg"
+        ],
+        "theme": "lain.mp3"
+    },
+    {
+        "name": "Lambdadelta",
+        "team": "shadow",
+        "image": "lambdadelta.webp",
+        "imageFallbacks": [
+            "lambdadelta.jpg"
+        ],
+        "theme": "lambdadelta.mp3"
+    },
+    {
+        "name": "Liche",
+        "team": "shadow",
+        "image": "liche.webp",
+        "imageFallbacks": [
+            "liche.jpg"
+        ]
+    },
+    {
+        "name": "Light",
+        "team": "shadow",
+        "image": "light.webp",
+        "imageFallbacks": [
+            "light.jpg"
+        ],
+        "theme": "light.mp3"
+    },
+    {
+        "name": "Lilith",
+        "team": "shadow",
+        "image": "lilith.webp",
+        "imageFallbacks": [
+            "lilith.jpg"
+        ],
+        "theme": "lilith.mp3"
+    },
+    {
+        "name": "Lonove",
+        "team": "shadow",
+        "image": "lonove.webp",
+        "imageFallbacks": [
+            "lonove.jpg"
+        ],
+        "theme": "lonove.mp3"
+    },
+    {
+        "name": "Loup Garou",
+        "team": "shadow",
+        "image": "loup-garou.webp",
+        "imageFallbacks": [
+            "loup-garou.jpg"
+        ]
+    },
+    {
+        "name": "Major",
+        "team": "shadow",
+        "image": "major.webp",
+        "imageFallbacks": [
+            "major.jpg"
+        ],
+        "theme": "major.mp3"
+    },
+    {
+        "name": "Maria",
+        "team": "shadow",
+        "image": "maria.webp",
+        "imageFallbacks": [
+            "maria.jpg"
+        ],
+        "theme": "maria.mp3"
+    },
+    {
+        "name": "Masochiste",
+        "team": "shadow",
+        "image": "masochiste.webp",
+        "imageFallbacks": [
+            "masochiste.jpg"
+        ]
+    },
+    {
+        "name": "Metamorphe",
+        "team": "shadow",
+        "image": "metamorphe.webp",
+        "imageFallbacks": [
+            "metamorphe.jpg"
+        ]
+    },
+    {
+        "name": "Momie",
+        "team": "shadow",
+        "image": "momie.webp",
+        "imageFallbacks": [
+            "momie.jpg"
+        ]
+    },
+    {
+        "name": "Monika",
+        "team": "shadow",
+        "image": "monika.webp",
+        "imageFallbacks": [
+            "monika.jpg"
+        ],
+        "theme": "monika.mp3"
+    },
+    {
+        "name": "Monokuma",
+        "team": "shadow",
+        "image": "monokuma.webp",
+        "imageFallbacks": [
+            "monokuma.jpg"
+        ],
+        "theme": "monokuma.mp3"
+    },
+    {
+        "name": "Muzan",
+        "team": "shadow",
+        "image": "muzan.webp",
+        "imageFallbacks": [
+            "muzan.jpg"
+        ],
+        "theme": "muzan.mp3"
+    },
+    {
+        "name": "Valkyrie",
+        "team": "shadow",
+        "image": "valkyrie.webp",
+        "imageFallbacks": [
+            "valkyrie.jpg"
+        ]
+    },
+    {
+        "name": "Vampire",
+        "team": "shadow",
+        "image": "vampire.webp",
+        "imageFallbacks": [
+            "vampire.jpg"
+        ]
+    },
+    {
+        "name": "Vanilla Ice",
+        "team": "shadow",
+        "image": "vanilla-ice.webp",
+        "imageFallbacks": [
+            "vanilla-ice.jpg"
+        ]
+    },
+    {
+        "name": "Velvet",
+        "team": "shadow",
+        "image": "velvet.webp",
+        "imageFallbacks": [
+            "velvet.jpg"
+        ],
+        "theme": "velvet.mp3"
+    },
+    {
+        "name": "Vicious",
+        "team": "shadow",
+        "image": "vicious.webp",
+        "imageFallbacks": [
+            "vicious.jpg"
+        ],
+        "theme": "vicious.mp3"
+    },
+    {
+        "name": "Vincent",
+        "team": "shadow",
+        "image": "vincent.webp",
+        "imageFallbacks": [
+            "vincent.jpg"
+        ],
+        "theme": "vincent.mp3"
+    },
+    {
+        "name": "Virgilia",
+        "team": "shadow",
+        "image": "virgilia.webp",
+        "imageFallbacks": [
+            "virgilia.jpg"
+        ],
+        "theme": "virgilia.mp3"
+    },
+    {
+        "name": "Vouivre",
+        "team": "shadow",
+        "image": "vouivre.webp",
+        "imageFallbacks": [
+            "vouivre.jpg"
+        ],
+        "theme": "vouivre.mp3"
+    }
+]

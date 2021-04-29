@@ -3,8 +3,8 @@
 /.svelte
 /build
 /functions
-static/theme.css
-static/cards/
+# static/theme.css
+# static/cards/
 deploy.sh
 /.vscode
 /stats
