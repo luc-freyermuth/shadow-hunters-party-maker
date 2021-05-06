@@ -85,6 +85,7 @@
   function handleMessage(type, data) {
     switch (type) {
       case 'goTo':
+        autoPlay = false;
         gameState = data.room;
         if (data.room === 'currentCard') {
           currentCard = data.roomData;
