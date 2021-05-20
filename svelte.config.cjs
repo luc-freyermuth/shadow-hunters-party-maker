@@ -1,6 +1,6 @@
 const sveltePreprocess = require('svelte-preprocess');
-const node = require('@sveltejs/adapter-node');
-const static = require('@sveltejs/adapter-static');
+// const node = require('@sveltejs/adapter-node');
+// const static = require('@sveltejs/adapter-static');
 const netlify = require('@sveltejs/adapter-netlify');
 const pkg = require('./package.json');
 
