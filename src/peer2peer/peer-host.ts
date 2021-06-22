@@ -123,14 +123,7 @@ export class PeerHost {
   startGame(gameConfig: GameConfig) {
     const teams: Teams = this.createTeams(gameConfig.teams.hunters, gameConfig.teams.shadows);
 
-    let cards = gameConfig.cards;
-    if (gameConfig.options.excludeAllPreviouslyPlayedCards) {
-      const previouslyPlayedCardNames = this.players
-        .map(p => p.previousCard)
-        .filter(card => !!card)
-        .map(card => card.name);
-      cards = cards.filter(card => !previouslyPlayedCardNames.includes(card.name));
-    }
+    const cards = this.getAvailableCards(gameConfig, this.players);
 
     switch (gameConfig.options.mode) {
       case 'single':
@@ -154,7 +147,20 @@ export class PeerHost {
         );
         break;
     }
-    // TODO : double and letter modes
+    // TODO : letter modes
+  }
+
+  getAvailableCards(gameConfig: GameConfig, players: Player[]) {
+    if (!gameConfig.options.excludeAllPreviouslyPlayedCards) {
+      return gameConfig.cards;
+    }
+
+    const previouslyPlayedCardNames = players
+      .map(p => p.previousCard)
+      .filter(card => !!card)
+      .map(card => card.name);
+
+    return gameConfig.cards.filter(card => !previouslyPlayedCardNames.includes(card.name));
   }
 
   createTeams(hunters: number, shadows: number): Teams {
