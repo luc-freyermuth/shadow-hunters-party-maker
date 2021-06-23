@@ -359,6 +359,7 @@ export class PeerHost {
     const currentCard = player.currentChoices.find(card => card.name === cardName);
     if (!currentCard) return;
     player.currentCard = currentCard;
+    player.previousCard = currentCard;
     this.registerPick(player);
     this.setPlayerLocationAsCurrentCard(player);
     this.sendPlayerToItsLocation(player);
