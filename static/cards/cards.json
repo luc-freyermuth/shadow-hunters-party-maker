@@ -52,6 +52,15 @@
         ]
     },
     {
+        "name": "Anis",
+        "team": "neutral",
+        "image": "anis.webp",
+        "imageFallbacks": [
+            "anis.jpg"
+        ],
+        "theme": "anis.mp3"
+    },
+    {
         "name": "Aqua",
         "team": "neutral",
         "image": "aqua.webp",
@@ -77,6 +86,15 @@
             "asuka.jpg"
         ],
         "theme": "asuka.mp3"
+    },
+    {
+        "name": "Bakalawak",
+        "team": "neutral",
+        "image": "bakalawak.webp",
+        "imageFallbacks": [
+            "bakalawak.jpg"
+        ],
+        "theme": "bakalawak.mp3"
     },
     {
         "name": "Batou",
@@ -201,12 +219,39 @@
         "theme": "claude.mp3"
     },
     {
+        "name": "Corentin",
+        "team": "neutral",
+        "image": "corentin.webp",
+        "imageFallbacks": [
+            "corentin.jpg"
+        ],
+        "theme": "corentin.mp3"
+    },
+    {
+        "name": "Curisutima",
+        "team": "neutral",
+        "image": "curisutima.webp",
+        "imageFallbacks": [
+            "curisutima.jpg"
+        ],
+        "theme": "curisutima.mp3"
+    },
+    {
         "name": "Daniel",
         "team": "neutral",
         "image": "daniel.webp",
         "imageFallbacks": [
             "daniel.jpg"
         ]
+    },
+    {
+        "name": "Darckoune",
+        "team": "neutral",
+        "image": "darckoune.webp",
+        "imageFallbacks": [
+            "darckoune.jpg"
+        ],
+        "theme": "darckoune.mp3"
     },
     {
         "name": "Darkness",
@@ -269,6 +314,15 @@
             "doppio.jpg"
         ],
         "theme": "doppio.mp3"
+    },
+    {
+        "name": "Earthling",
+        "team": "hunter",
+        "image": "earthling.webp",
+        "imageFallbacks": [
+            "earthling.jpg"
+        ],
+        "theme": "earthling.mp3"
     },
     {
         "name": "Edgeworth",
@@ -393,6 +447,15 @@
         ]
     },
     {
+        "name": "Fugo",
+        "team": "hunter",
+        "image": "fugo.webp",
+        "imageFallbacks": [
+            "fugo.jpg"
+        ],
+        "theme": "fugo.mp3"
+    },
+    {
         "name": "Georges",
         "team": "hunter",
         "image": "georges.webp",
@@ -408,6 +471,15 @@
             "geralt.jpg"
         ],
         "theme": "geralt.mp3"
+    },
+    {
+        "name": "Gilugamesh",
+        "team": "hunter",
+        "image": "gilugamesh.webp",
+        "imageFallbacks": [
+            "gilugamesh.jpg"
+        ],
+        "theme": "gilugamesh.mp3"
     },
     {
         "name": "Ginoza",
@@ -515,6 +587,15 @@
         ]
     },
     {
+        "name": "Lucille",
+        "team": "shadow",
+        "image": "lucille.webp",
+        "imageFallbacks": [
+            "lucille.jpg"
+        ],
+        "theme": "lucille.mp3"
+    },
+    {
         "name": "Major",
         "team": "shadow",
         "image": "major.webp",
@@ -539,6 +620,15 @@
         "imageFallbacks": [
             "masochiste.jpg"
         ]
+    },
+    {
+        "name": "Master Of Salt",
+        "team": "shadow",
+        "image": "master-of-salt.webp",
+        "imageFallbacks": [
+            "master-of-salt.jpg"
+        ],
+        "theme": "master-of-salt.mp3"
     },
     {
         "name": "Metamorphe",
@@ -626,13 +716,23 @@
         "theme": "vicious.mp3"
     },
     {
+        "name": "Vincent Zero",
+        "team": "shadow",
+        "image": "vincent-zero.webp",
+        "imageFallbacks": [
+            "vincent-zero.jpg"
+        ],
+        "theme": "vincent-zero.mp3"
+    },
+    {
         "name": "Vincent",
         "team": "shadow",
         "image": "vincent.webp",
         "imageFallbacks": [
+            "vincent-zero.jpg",
             "vincent.jpg"
         ],
-        "theme": "vincent.mp3"
+        "theme": "vincent-zero.mp3"
     },
     {
         "name": "Virgilia",
