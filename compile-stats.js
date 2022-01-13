@@ -158,13 +158,13 @@ fs.writeFileSync(
         mapToObject(mapPlayerWins),
         item => item.winRate,
         (a, b) => b - a,
-        item => item.played > 5
+        item => item.played > 2
       ),
       playerFunLevel: orderObject(
         mapToObject(mapPlayerWins),
         item => item.averageFun,
         (a, b) => b - a,
-        item => item.played > 5
+        item => item.played > 2
       )
     },
     null,
